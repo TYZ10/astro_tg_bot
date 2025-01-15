@@ -21,6 +21,8 @@ class ConfigBot:
         self.URL_BOT: str = env.str("URL_BOT")
         admin_id = env.str("ADMINS_ID").replace(" ", "")
         self.ADMINS_ID: list = list(map(int, admin_id.split(",")))
+        self.CHANEL_URL: str = env.str("CHANEL_URL")
+        self.CHANEL_ID: int = env.int("CHANEL_ID")
 
     async def skip_updates(self):
         try:

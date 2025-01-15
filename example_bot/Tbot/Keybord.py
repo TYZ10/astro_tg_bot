@@ -7,7 +7,7 @@ from aiogram import types
 from example_bot.Config_bot import ConfigBot
 
 
-class KeybordBot:
+class KeyboardBot:
     def __init__(self, config: ConfigBot):
         pass
 

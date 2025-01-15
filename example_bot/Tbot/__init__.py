@@ -1,0 +1,1 @@
+from example_bot.misc.delete_messages import delete_messages as del_mes

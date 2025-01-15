@@ -6,20 +6,21 @@ from environs import Env
 
 
 class ConfigBot:
-    def __init__(self, token: str, url_bot: str):
+    def __init__(self):
 
         env = Env()
         env.read_env()
 
         self.STOR = MemoryStorage()
 
-        self.TOKEN: str = token
+        self.TOKEN: str = env.str("TOKEN")
 
         self.bot: Bot = Bot(self.TOKEN)
         self.dp: Dispatcher = Dispatcher(storage=self.STOR)
 
-        self.URL_BOT = url_bot
-        self.ADMIN_ID = [2030444507]
+        self.URL_BOT: str = env.str("URL_BOT")
+        admin_id = env.str("ADMINS_ID").replace(" ", "")
+        self.ADMINS_ID: list = list(map(int, admin_id.split(",")))
 
     async def skip_updates(self):
         try:

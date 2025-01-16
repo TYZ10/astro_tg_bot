@@ -9,7 +9,29 @@ from example_bot.Config_bot import ConfigBot
 
 class KeyboardBot:
     def __init__(self, config: ConfigBot):
-        pass
+        self.config = config
+
+        subscribe_ikb = InlineKeyboardBuilder()
+        subscribe_ikb.button(
+            text="Канал",
+            url=self.config.CHANEL_URL
+        )
+        self.subscribe_ikb = subscribe_ikb
+
+        self.main_menu_ikb = self.__reply_kb(
+            [
+                "Анализ натальной карты",
+                "Прогнозы",
+                "Реферальная система",
+                "Мои данные",
+                "Помощь",
+                "Гороскоп для бизнеса",
+                "Рекомендации по самореализации",
+                "Анализ совместимости в отношениях",
+                "Астрологический прогноз для здоровья",
+            ],
+            adjust_count=2
+        )
 
     def __inline_kb(
             self,
@@ -42,5 +64,5 @@ class KeyboardBot:
             )
         keyboard.adjust(adjust_count)
 
-        return keyboard.as_markup()
+        return keyboard.as_markup(resize_keyboard=True)
 

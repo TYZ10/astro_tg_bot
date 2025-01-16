@@ -2,7 +2,7 @@ from aiogram import Bot
 from example_bot.Config_bot import ConfigBot
 
 
-async def check_sub(bot: Bot, config: ConfigBot, user_id: int):
+async def check_sub(bot: Bot, config: ConfigBot, user_id: int) -> bool:
     """
     Проверяет подписку на канал, если не получилось проверить возвращает True,
     Если пользователь подписан на канал, возвращает True иначе False

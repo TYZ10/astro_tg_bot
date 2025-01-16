@@ -24,6 +24,10 @@ class ConfigBot:
         self.CHANEL_URL: str = env.str("CHANEL_URL")
         self.CHANEL_ID: int = env.int("CHANEL_ID")
 
+        self.POSTGRESQL_USER: str = env.str("POSTGRESQL_USER")
+        self.POSTGRESQL_PASSWORD: str = env.str("POSTGRESQL_PASSWORD")
+        self.POSTGRESQL_DBNAME: str = env.str("POSTGRESQL_DBNAME")
+
     async def skip_updates(self):
         try:
             await self.bot.delete_webhook(drop_pending_updates=True)

@@ -33,6 +33,13 @@ class KeyboardBot:
             adjust_count=2
         )
 
+        self.my_data_ikb = self.__inline_kb(
+            {
+                "Изменить свои данные": "modify my data",
+                "Главное меню": "main menu"
+            }
+        )
+
     def __inline_kb(
             self,
             kb_data: dict,

@@ -9,6 +9,10 @@ class MainMenuBot(BasicBotOperation):
                              state: FSMContext):
         """Главное меню"""
         await state.clear()
+        await message.answer(
+            text="Главное меню",
+            reply_markup=self.keyboard.main_menu_kb,
+        )
 
     async def main_menu_call(self, call: types.CallbackQuery,
                              state: FSMContext):
@@ -16,5 +20,5 @@ class MainMenuBot(BasicBotOperation):
         await self.main_menu(call.message, state)
 
     def create_router(self):
-        self.router.callback_query(F.data == 'main_menu',
+        self.router.callback_query(F.data == 'main menu',
                                    self.main_menu_call)

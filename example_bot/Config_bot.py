@@ -3,6 +3,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters.state import StatesGroup, State
 
 from environs import Env
+from opencage.geocoder import OpenCageGeocode
 
 
 class ConfigBot:
@@ -28,6 +29,10 @@ class ConfigBot:
         self.POSTGRESQL_PASSWORD: str = env.str("POSTGRESQL_PASSWORD")
         self.POSTGRESQL_DBNAME: str = env.str("POSTGRESQL_DBNAME")
 
+        #https://opencagedata.com/api
+        location_api_key: str = env.str("LOCATION_API_KEY")
+        self.geocoder: OpenCageGeocode = OpenCageGeocode(location_api_key)
+
     async def skip_updates(self):
         try:
             await self.bot.delete_webhook(drop_pending_updates=True)
@@ -36,5 +41,6 @@ class ConfigBot:
 
 
 class states(StatesGroup):
-    _ = State()
-
+    data_birth = State()
+    time_birth = State()
+    place_birth = State()

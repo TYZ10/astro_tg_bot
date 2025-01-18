@@ -40,6 +40,12 @@ class KeyboardBot:
             }
         )
 
+        self.abolition_ikb = self.__inline_kb(
+            {
+                "Отменить ввод данных": "main menu"
+            }
+        )
+
     def __inline_kb(
             self,
             kb_data: dict,

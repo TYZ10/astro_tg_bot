@@ -3,6 +3,7 @@ from psycopg2 import connect, _psycopg
 from .init_db import init_db
 from .insert_db import insert_new_user
 from .select_db import select_user_info_db
+from .update_db import update_user_info_db
 
 
 class OperationDataBaseBot:
@@ -48,4 +49,11 @@ class OperationDataBaseBot:
             info_value=info_value,
             value=value,
             many=many,
+        )
+
+    def update_user_info_db(self, dict_info: dict, userid: int):
+        self.__operation_db(
+            update_user_info_db,
+            dict_info=dict_info,
+            userid=userid,
         )

@@ -25,6 +25,15 @@ class StartBot(BasicBotOperation):
         if is_new_user:
             await self.subscribe(message, state)
 
+            ref_userid = message.text.split(' ', 1)[-1]
+            if ref_userid != '/start':
+                ref_userid = int(ref_userid)
+
+                self.operation_db.update_user_info_db(
+                    {self.operation_db.COLUMNS_INFO.referral_user: ref_userid},
+                    message.from_user.id
+                )
+
     async def subscribe(self, message_or_call, state: FSMContext):
         """Хэндлер для подписки на канал"""
 

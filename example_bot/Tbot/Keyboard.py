@@ -16,9 +16,9 @@ class KeyboardBot:
             text="Канал",
             url=self.config.CHANEL_URL
         )
-        self.subscribe_ikb = subscribe_ikb
+        self.subscribe_ikb = subscribe_ikb.as_markup()
 
-        self.main_menu_ikb = self.__reply_kb(
+        self.main_menu_kb = self.__reply_kb(
             [
                 "Анализ натальной карты",
                 "Прогнозы",

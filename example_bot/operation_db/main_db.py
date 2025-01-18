@@ -2,9 +2,12 @@ from psycopg2 import connect, _psycopg
 
 from .init_db import init_db
 from .insert_db import insert_new_user
+from .select_db import select_user_info_db
 
 
 class OperationDataBaseBot:
+    from . import COLUMNS_INFO
+
     def __init__(self, name_db: str, COLUMNS_INFO,
                  ps_user: str, ps_password: str, ps_dbname: str):
         from .columns_info import ColumnsInfoDB
@@ -35,4 +38,14 @@ class OperationDataBaseBot:
             userid=userid,
             full_name=full_name,
             username=username
+        )
+    
+    def select_user_info_db(self, column, info_value,
+                            value=COLUMNS_INFO.userid, many=False):
+        self.__operation_db(
+            select_user_info_db,
+            column=column,
+            info_value=info_value,
+            value=value,
+            many=many,
         )

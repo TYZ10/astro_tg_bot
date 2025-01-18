@@ -9,6 +9,7 @@ class ColumnsInfoDB:
         self.last_action = "last_action"
         self.generation_count = "generation_count"
         self.payments_start = "payments_start"
+        self.generation_count_all = "generation_count_all"
 
         self.data_birth = "data_birth"
         self.time_birth = "time_birth"

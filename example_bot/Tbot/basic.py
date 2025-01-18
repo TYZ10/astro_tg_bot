@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from aiogram import types, Router
+from aiogram import Router
 
 from . import (
     OperationDataBaseBot, ConfigBot
@@ -28,4 +28,3 @@ class BasicBotOperation(ABC):
     @abstractmethod
     async def create_router(self):
         """Создание роутера"""
-

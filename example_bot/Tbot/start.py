@@ -1,12 +1,13 @@
 from aiogram.filters.command import Command
 from aiogram import types
+from aiogram.fsm.context import FSMContext
 
 from . import BasicBotOperation
 from .filters import CheckSubFilter
 
 
 class StartBot(BasicBotOperation):
-    async def start(self, message: types.Message):
+    async def start(self, message: types.Message, state: FSMContext):
         """Стартовый хэндлер"""
 
         is_new_user = self.operation_db.insert_new_user(
@@ -18,14 +19,16 @@ class StartBot(BasicBotOperation):
         await message.answer(
             text=f"Привет {message.from_user.first_name}, я бот с "
                  f"астрономическими функциями.",
-            reply_markup=self.keyboard.main_menu_ikb
+            reply_markup=self.keyboard.main_menu_kb
         )
 
         if is_new_user:
-            await self.subscribe(message)
+            await self.subscribe(message, state)
 
-    async def subscribe(self, message_or_call):
+    async def subscribe(self, message_or_call, state: FSMContext):
         """Хэндлер для подписки на канал"""
+
+        await state.clear()
 
         if isinstance(message_or_call, types.CallbackQuery):
             message_or_call = message_or_call.message
@@ -34,6 +37,10 @@ class StartBot(BasicBotOperation):
             text="Вы не подписались на наш канал, подпишитесь что бы "
                  "пользоваться ботом.",
             reply_markup=self.keyboard.subscribe_ikb
+        )
+        await message_or_call.answer(
+            text="Перемещаю в главное меню.",
+            reply_markup=self.keyboard.main_menu_kb
         )
 
     def create_router(self):

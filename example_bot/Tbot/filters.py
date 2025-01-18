@@ -11,4 +11,4 @@ class CheckSubFilter(BaseFilter):
 
     async def __call__(self, message_or_call) -> bool:
         userid = message_or_call.from_user.id
-        return not(await check_sub(message_or_call.bot, self.config, userid))
+        return not (await check_sub(message_or_call.bot, self.config, userid))

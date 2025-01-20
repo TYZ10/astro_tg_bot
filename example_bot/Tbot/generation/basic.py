@@ -1,4 +1,6 @@
 from aiogram.fsm.state import State
+from aiogram.filters import BaseFilter
+from aiogram.types import Message
 
 
 class TypeGeneration:
@@ -7,7 +9,7 @@ class TypeGeneration:
         self.state: State = state
 
 
-class AllTypesGeneration:
+class AllTypesGeneration(BaseFilter):
     from example_bot.Tbot import states
 
     natal_chart_analysis: TypeGeneration = TypeGeneration(
@@ -34,3 +36,17 @@ class AllTypesGeneration:
         "Астрологический прогноз для здоровья",
         states.astrological_forecast_health
     )
+
+    def __call__(self, message: Message) -> bool:
+        text = message.text
+
+        if (
+                text == self.natal_chart_analysis.text or
+                text == self.predictions.text or
+                text == self.horoscope_for_business.text or
+                text == self.recommendations_self_actualization.text or
+                text == self.analyzing_compatibility_relationship.text or
+                text == self.astrological_forecast_health.text
+        ):
+            return True
+        return False

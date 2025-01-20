@@ -46,6 +46,13 @@ class KeyboardBot:
             }
         )
 
+        self.start_generation_ikb = self.__inline_kb(
+            {
+                "Использовать предыдущие данные.": "start generation",
+                "Ввести новые данные.": "modify my data",
+            }
+        )
+
     def __inline_kb(
             self,
             kb_data: dict,

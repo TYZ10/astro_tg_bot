@@ -44,3 +44,10 @@ class states(StatesGroup):
     data_birth = State()
     time_birth = State()
     place_birth = State()
+
+    natal_chart_analysis = State()
+    predictions = State()
+    horoscope_for_business = State()
+    recommendations_self_actualization = State()
+    analyzing_compatibility_relationship = State()
+    astrological_forecast_health = State()

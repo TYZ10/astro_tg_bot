@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from aiogram.filters.command import Command
 from aiogram import types, F
 from aiogram.fsm.context import FSMContext
 
@@ -45,7 +44,7 @@ class MyDataBot(BasicBotOperation):
     async def get_data_birth(self, message: types.Message, state: FSMContext):
         data_birth = message.text
         try:
-            date = datetime.strptime(data_birth, '%Y %m %d')
+            data_birth = datetime.strptime(data_birth, '%Y %m %d')
         except:
             await message.answer(
                 text="Введён неверный формат даты."

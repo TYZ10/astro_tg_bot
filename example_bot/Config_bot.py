@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters.state import StatesGroup, State
 
+from openai import AsyncOpenAI
 from environs import Env
 from opencage.geocoder import OpenCageGeocode
 
@@ -32,6 +33,12 @@ class ConfigBot:
         #https://opencagedata.com/api
         location_api_key: str = env.str("LOCATION_API_KEY")
         self.geocoder: OpenCageGeocode = OpenCageGeocode(location_api_key)
+
+        TOKEN_CHAT_GPT: str = env.str("TOKEN_CHAT_GPT")
+
+        self.client_gpt: AsyncOpenAI = AsyncOpenAI(
+            api_key=TOKEN_CHAT_GPT
+        )
 
     async def skip_updates(self):
         try:

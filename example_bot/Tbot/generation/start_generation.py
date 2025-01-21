@@ -18,6 +18,7 @@ class StartAllGeneration(BasicBotOperation):
         if count_generation > 0:
             text = "Хотите ввести новые данные или использовать предыдущие?"
             keyboard = self.keyboard.start_generation_ikb
+            await state.set_state(AllTypesGeneration()[message.text])
         else:
             text = ("Вы использовали все доступные генерации. "
                     "Новые генерации будут доступны завтра в 00:00 по МСК.")

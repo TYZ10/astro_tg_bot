@@ -53,6 +53,16 @@ class KeyboardBot:
             }
         )
 
+        self.selection_predictions_ikb = self.__inline_kb(
+            {
+                "На год": "select prediction_year",
+                "На месяц": "select prediction_month",
+                "На день (Требует платной подписки!)": "select prediction_day",
+                "Отмена": "main menu",
+            }
+        )
+    
+
     def __inline_kb(
             self,
             kb_data: dict,

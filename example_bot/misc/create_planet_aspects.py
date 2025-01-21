@@ -3,9 +3,9 @@ import math
 import swisseph as swe
 
 
-def create_planet_aspects(date: str,
-                          latitude: float,
-                          longitude: float) -> dict:
+def create_aspects(date: str,
+                   latitude: float,
+                   longitude: float) -> dict:
     # Данные
     date = str(date)  # Дата и время рождения
     latitude = latitude  # Широта

@@ -10,16 +10,13 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
 
     async def analyzing_compatibility_relationship(
             self,
-            call: types.CallbackQuery,
-            state: FSMContext
+            place_birth,
+            latitude,
+            longitude,
+            time_birth,
+            data_birth,
     ):
-        pass
+        """Анализ совместимости в отношениях"""
 
     async def create_router(self):
-        self.router.callback_query(
-            self.analyzing_compatibility_relationship,
-            F.data == "start generation",
-            StateFilter(
-                AllTypesGeneration.analyzing_compatibility_relationship.state
-            )
-        )
+        pass

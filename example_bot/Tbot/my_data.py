@@ -4,10 +4,22 @@ from aiogram import types, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters.state import StateFilter
 
-from . import BasicBotOperation, states
+from . import (
+    BasicBotOperation, states, AnalyzingCompatibilityRelationship,
+    AllTypesGeneration
+)
 
 
 class MyDataBot(BasicBotOperation):
+
+    def __init__(self, analyz_rel: AnalyzingCompatibilityRelationship):
+        super().__init__(
+            analyz_rel.config,
+            analyz_rel.operation_db,
+            analyz_rel.keyboard
+        )
+        self.analyz_rel: AnalyzingCompatibilityRelationship = analyz_rel
+
     async def my_data_handler(self, message: types.Message):
         col_info = self.operation_db.COLUMNS_INFO
 
@@ -35,11 +47,26 @@ class MyDataBot(BasicBotOperation):
     async def modify_my_data(self,
                              call: types.CallbackQuery,
                              state: FSMContext):
-        await state.set_state(states.data_birth)
+        current_state = await state.get_state()
 
-        await call.message.answer(text="Введите дату вашего рождения в "
-                                       "формате YYYY MM DD.\n\n"
-                                       "Пример: 2000 01 21",
+        if current_state == "states:analyzing_compatibility_relationship":
+            is_partner = True
+        else:
+            is_partner = False
+
+        await state.set_state(states.data_birth)
+        await state.update_data(is_partner=is_partner)
+
+        if is_partner:
+            text = "Введите дату рождения партнёра в "
+            "формате YYYY MM DD.\n\n"
+            "Пример: 2000 01 21"
+        else:
+            text = "Введите дату вашего рождения в "
+            "формате YYYY MM DD.\n\n"
+            "Пример: 2000 01 21"
+
+        await call.message.answer(text=text,
                                   reply_markup=self.keyboard.abolition_ikb)
 
     async def get_data_birth(self, message: types.Message, state: FSMContext):
@@ -49,14 +76,14 @@ class MyDataBot(BasicBotOperation):
         except:
             await message.answer(
                 text="Введён неверный формат даты."
-                     "Введите дату вашего рождения в "
+                     "Введите дату рождения в "
                      "формате YYYY MM DD (год месяц день) числами!\n\n"
                      "Пример: 2000 01 21",
                 reply_markup=self.keyboard.abolition_ikb)
             return
 
         await message.answer(
-            text="Введите время вашего рождения в формате HH MM SS.\n\n",
+            text="Введите время рождения в формате HH MM SS.\n\n",
             reply_markup=self.keyboard.abolition_ikb
         )
         await state.set_state(states.time_birth)
@@ -69,13 +96,13 @@ class MyDataBot(BasicBotOperation):
         except:
             await message.answer(
                 text="Введён неверный формат времени."
-                     "Введите время вашего рождения в "
+                     "Введите время рождения в "
                      "формате HH MM SS (Часы минуты секунды) числами!\n\n"
                      "Пример: 12 30 02",
                 reply_markup=self.keyboard.abolition_ikb)
             return
         await message.answer(
-            text="Введите место вашего рождения.",
+            text="Введите место рождения.",
             reply_markup=self.keyboard.abolition_ikb
         )
         await state.set_state(states.place_birth)
@@ -89,6 +116,7 @@ class MyDataBot(BasicBotOperation):
         place_birth = message.text
         data_birth = st['data_birth']
         time_birth = st['time_birth']
+        is_partner = st['is_partner']
 
         result = await self.config.geocoder.geocode_async(
             place_birth,
@@ -99,27 +127,36 @@ class MyDataBot(BasicBotOperation):
             longitude = result['results'][0]['geometry']['lng'] # Долгота
         except:
             await message.answer(
-                text="Введите место вашего рождения точнее.",
+                text="Введите место рождения точнее.",
                 reply_markup=self.keyboard.aboцlition_ikb)
             return
 
         await state.clear()
 
-        col_info = self.operation_db.COLUMNS_INFO
+        if is_partner:
+            await self.analyz_rel.analyzing_compatibility_relationship(
+                place_birth,
+                latitude,
+                longitude,
+                time_birth,
+                data_birth
+            )
+        else:
+            col_info = self.operation_db.COLUMNS_INFO
 
-        self.operation_db.update_user_info_db(
-            {
-                col_info.place_birth: place_birth,
-                col_info.latitude: latitude,
-                col_info.longitude: longitude,
-                col_info.time_birth: time_birth,
-                col_info.data_birth: data_birth,
-            },
-            userid=message.from_user.id
-        )
+            self.operation_db.update_user_info_db(
+                {
+                    col_info.place_birth: place_birth,
+                    col_info.latitude: latitude,
+                    col_info.longitude: longitude,
+                    col_info.time_birth: time_birth,
+                    col_info.data_birth: data_birth,
+                },
+                userid=message.from_user.id
+            )
 
-        await message.answer(text="Данные успешно сохранены.",
-                             reply_markup=self.keyboard.main_menu_kb)
+            await message.answer(text="Данные успешно сохранены.",
+                                 reply_markup=self.keyboard.main_menu_kb)
 
     async def create_router(self):
         self.router.message(self.my_data_handler, F.text == "Мои данные")
@@ -131,5 +168,12 @@ class MyDataBot(BasicBotOperation):
                             StateFilter(states.time_birth))
         self.router.message(self.get_place_birth,
                             StateFilter(states.place_birth))
+        self.router.callback_query(
+            self.modify_my_data,
+            F.data == "start generation",
+            StateFilter(
+                AllTypesGeneration.analyzing_compatibility_relationship.state
+            )
+        )
 
 

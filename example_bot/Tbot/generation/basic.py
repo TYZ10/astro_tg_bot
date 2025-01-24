@@ -2,6 +2,7 @@ from aiogram.fsm.state import State
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
 
+
 class TypeGeneration:
     def __init__(self, text: str, state: State):
         self.text: str = text
@@ -35,6 +36,10 @@ class AllTypesGeneration(BaseFilter):
         "Астрологический прогноз для здоровья",
         states.astrological_forecast_health
     )
+    analyzing_personal_strengths: TypeGeneration = TypeGeneration(
+        "Анализ сильных сторон личности",
+        states.analyzing_personal_strengths
+    )
 
     def __init__(self):
         self.types = {
@@ -46,7 +51,9 @@ class AllTypesGeneration(BaseFilter):
             "Анализ совместимости в отношениях":
                 self.analyzing_compatibility_relationship.state,
             "Астрологический прогноз для здоровья":
-                self.astrological_forecast_health.state
+                self.astrological_forecast_health.state,
+            "Анализ сильных сторон личности":
+                self.analyzing_personal_strengths.state,
         }
 
     def __getitem__(self, item):

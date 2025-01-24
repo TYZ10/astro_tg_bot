@@ -53,8 +53,15 @@ class states(StatesGroup):
     place_birth = State()
 
     natal_chart_analysis = State()
+    natal_chart_analysis_1_aspect = State()
+    natal_chart_analysis_2_aspect = State()
+
     predictions = State()
+    predictions_1_aspect = State()
+    predictions_2_aspect = State()
+
     horoscope_for_business = State()
     recommendations_self_actualization = State()
     analyzing_compatibility_relationship = State()
     astrological_forecast_health = State()
+    analyzing_personal_strengths = State()

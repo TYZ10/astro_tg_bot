@@ -134,12 +134,25 @@ class MyDataBot(BasicBotOperation):
         await state.clear()
 
         if is_partner:
+            col_info = self.operation_db.COLUMNS_INFO
+
+            (place_birth_2, latitude_2, longitude_2, time_birth_2,
+             data_birth_2) = self.operation_db.select_user_info_db(
+                f"({col_info.place_birth},"
+                f"{col_info.latitude},"
+                f"{col_info.longitude},"
+                f"{col_info.time_birth},"
+                f"{col_info.data_birth})",
+                message.from_user.id,
+                many=True
+            )
+
             await self.analyz_rel.analyzing_compatibility_relationship(
-                place_birth,
-                latitude,
-                longitude,
-                time_birth,
-                data_birth
+                [place_birth, latitude, longitude, time_birth, data_birth],
+                [place_birth_2, latitude_2, longitude_2,
+                 time_birth_2, data_birth_2],
+                message,
+                state
             )
         else:
             col_info = self.operation_db.COLUMNS_INFO

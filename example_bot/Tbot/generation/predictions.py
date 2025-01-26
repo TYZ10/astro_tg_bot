@@ -5,17 +5,16 @@ from aiogram.filters.state import StateFilter
 from . import AllTypesGeneration
 from example_bot.Tbot import BasicBotOperation
 from .get_info_gpt import main_get_info_gpt
-from ...Config_bot import states
-from ...misc import create_aspects
-
+from example_bot.Config_bot import states
+from example_bot.misc import create_aspects
+from example_bot.misc.datetime_function import get_day_and_hours_from_date
 
 class Predictions(BasicBotOperation):
     text = """Ты профессиональный астролог. На основе данных о дате, времени и месте рождения составь подробный прогноз {}, учитывая два аспекта, выбранные пользователем. Используй следующую структуру: 1) Введение — цель анализа и его значимость для планирования ближайшего дня. 2) Общая энергетика дня — ключевые тенденции и их влияние на общее состояние. 3) {} — максимально расширенный анализ первых двух выбранных аспектов, их влияние на настроение, события и взаимодействия, минимум 2000 знаков. (например, финансы, здоровье, карьера, отношения, эмоциональный баланс). 4) Физическое и эмоциональное состояние — прогноз, основанный на выбранных аспектах и общем контексте дня. 5) Важные моменты дня — периоды повышенной активности или чувствительности. 6) Рекомендации — персональные советы, учитывающие выбранные аспекты, для достижения гармонии и продуктивности. 7) Заключение — ключевые выводы и основные акценты на день. 8) Совет дня. Не используй термины астрологии, такие как знаки зодиака, названия планет или аспектов, но сохраняй суть их взаимодействия и влияния на выбранные аспекты и жизненные сферы."""
 
     async def selection_predictions(
             self,
-            call: types.CallbackQuery,
-            state: FSMContext
+            call: types.CallbackQuery
     ):
         await call.message.answer(
             text="Выберите период предсказания:",
@@ -27,6 +26,22 @@ class Predictions(BasicBotOperation):
             call: types.CallbackQuery,
             state: FSMContext):
         _, period = call.data.split("_", maxsplit=1)
+
+        if period == "day":
+            col_info = self.operation_db.COLUMNS_INFO
+
+            payments_end = self.operation_db.select_user_info_db(
+                col_info.payments_end,
+                call.from_user.id
+            )
+
+            if get_day_and_hours_from_date(payments_end) <= 0:
+                await call.message.answer(
+                    text="Этот период закрыт, что бы получить к нему доступ "
+                         "нужна платная подписка! Выберите другой период или "
+                         "оплатите подписку и повторите выбор."
+                )
+                return
 
         await state.update_data(period=period)
 

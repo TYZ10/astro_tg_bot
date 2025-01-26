@@ -2,8 +2,8 @@ from psycopg2 import connect, _psycopg
 
 from .init_db import init_db
 from .insert_db import insert_new_user
-from .select_db import select_user_info_db
-from .update_db import update_user_info_db
+from .select_db import select_user_info_db, select_all_user_info_db
+from .update_db import update_user_info_db, update_all_user_info_db
 
 
 class OperationDataBaseBot:
@@ -51,9 +51,21 @@ class OperationDataBaseBot:
             many=many,
         )
 
+    def select_all_user_info_db(self, column):
+        self.__operation_db(
+            select_all_user_info_db,
+            column=column,
+        )
+
     def update_user_info_db(self, dict_info: dict, userid: int):
         self.__operation_db(
             update_user_info_db,
             dict_info=dict_info,
             userid=userid,
+        )
+
+    def update_all_user_info_db(self, dict_info: dict):
+        self.__operation_db(
+            update_all_user_info_db,
+            dict_info=dict_info,
         )

@@ -8,7 +8,7 @@ class ColumnsInfoDB:
         self.first_arrival = "first_arrival"
         self.last_action = "last_action"
         self.generation_count = "generation_count"
-        self.payments_start = "payments_start"
+        self.payments_end = "payments_end"
         self.generation_count_all = "generation_count_all"
 
         self.data_birth = "data_birth"
@@ -19,6 +19,7 @@ class ColumnsInfoDB:
 
         self.referrals_count = "referrals_count"
         self.referral_user = "referral_user"
+        self.payments_token = "payments_token"
 
 
 COLUMNS_INFO = ColumnsInfoDB()

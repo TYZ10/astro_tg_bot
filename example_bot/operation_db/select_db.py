@@ -14,3 +14,8 @@ def select_user_info_db(column, info_value,
         return result[0]
     except:
         return result
+
+
+def select_all_user_info_db(column, name_db: str, cur, **kwargs):
+    cur.execute(f'SELECT {column} FROM "{name_db}"')
+    return cur.fetchall()

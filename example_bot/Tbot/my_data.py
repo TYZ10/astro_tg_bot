@@ -41,7 +41,8 @@ class MyDataBot(BasicBotOperation):
                  f"Дата рождения: {data_birth}\n"
                  f"Время рождения: {time_birth}\n"
                  f"Место рождения: {place_birth}\n",
-            reply_markup=self.keyboard.my_data_ikb
+            reply_markup=self.keyboard.my_data_ikb,
+            parse_mode="HTML"
         )
 
     async def modify_my_data(self,

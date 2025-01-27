@@ -25,7 +25,7 @@ class ConfigBot:
         admin_id = env.str("ADMINS_ID").replace(" ", "")
         self.ADMINS_ID: list = list(map(int, admin_id.split(",")))
         self.CHANEL_URL: str = env.str("CHANEL_URL")
-        self.CHANEL_ID: int = env.int("CHANEL_ID")
+        self.CHANEL_ID: str = env.str("CHANEL_ID")
 
         self.POSTGRESQL_USER: str = env.str("POSTGRESQL_USER")
         self.POSTGRESQL_PASSWORD: str = env.str("POSTGRESQL_PASSWORD")

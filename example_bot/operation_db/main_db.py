@@ -46,7 +46,7 @@ class OperationDataBaseBot:
 
     def select_user_info_db(self, column, info_value,
                             value="userid", many=False):
-        self.__operation_db(
+        return self.__operation_db(
             select_user_info_db,
             column=column,
             info_value=info_value,
@@ -55,7 +55,7 @@ class OperationDataBaseBot:
         )
 
     def select_all_user_info_db(self, column):
-        self.__operation_db(
+        return self.__operation_db(
             select_all_user_info_db,
             column=column,
         )

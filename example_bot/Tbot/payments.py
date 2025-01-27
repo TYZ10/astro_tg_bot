@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import types, F
 from aiogram.fsm.context import FSMContext
 from yookassa import Payment
@@ -47,21 +49,23 @@ class PaymentsBot(BasicBotOperation):
 
         #  https://yookassa.ru/developers/api#payment_object
         #  https://yookassa.ru/developers/api#create_payment
+        try:
+            payment = Payment.create({
+                "amount": {
+                    "value": "250.00",
+                    "currency": "RUB"
+                },
+                "confirmation": {
+                    "type": "redirect",
+                    "return_url": self.config.URL_BOT
+                },
+                "capture": True,
+                "description": "Оплата подписки"})
 
-        payment = Payment.create({
-            "amount": {
-                "value": "250.00",
-                "currency": "RUB"
-            },
-            "confirmation": {
-                "type": "redirect",
-                "return_url": self.config.URL_BOT
-            },
-            "capture": True,
-            "description": "Оплата подписки"})
-
-        url = payment.confirmation.confirmation_url
-        return payment.id, url
+            url = payment.confirmation.confirmation_url
+            return payment.id, url
+        except:
+            return None, None
 
     @staticmethod
     def check_user_payments(payment_id) -> bool:
@@ -94,6 +98,14 @@ class PaymentsBot(BasicBotOperation):
             )
         else:
             pay_id, url = self.__create_payments()
+
+            if pay_id is None:
+                await message.answer(
+                    text="Произошла ошибка при создании оплаты, попробуйте "
+                         "позже",
+                    reply_markup=self.keyboard.main_menu_kb,
+                )
+                return
 
             self.operation_db.update_user_info_db(
                 {

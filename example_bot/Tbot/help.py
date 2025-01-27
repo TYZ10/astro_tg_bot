@@ -11,6 +11,6 @@ class HelpBot(BasicBotOperation):
         await message.answer("Информация для помощи пользователям.",
                              reply_markup=self.keyboard.main_menu_kb)
 
-    async def create_router(self):
+    def create_router(self):
         self.router.message(Command('help'), self.help_handler)
         self.router.message(F.text == "Помощь", self.help_handler)

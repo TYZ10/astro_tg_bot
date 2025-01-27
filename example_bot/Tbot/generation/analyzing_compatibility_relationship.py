@@ -76,5 +76,5 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
 
         await state.clear()
 
-    async def create_router(self):
+    def create_router(self):
         pass

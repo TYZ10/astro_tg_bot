@@ -25,6 +25,6 @@ class RefSystemBot(BasicBotOperation):
             parse_mode="HTML"
         )
 
-    async def create_router(self):
+    def create_router(self):
         self.router.message(F.text == "Реферальная система",
                             self.my_ref_handler)

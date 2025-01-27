@@ -67,6 +67,8 @@ class StartBot(BasicBotOperation):
     def create_router(self):
         self.router.message.register(self.start, Command("start"))
         self.router.message.register(self.subscribe,
-                                     CheckSubFilter(self.config))
+                                     CheckSubFilter(self.config,
+                                                    self.operation_db))
         self.router.callback_query.register(self.subscribe,
-                                            CheckSubFilter(self.config))
+                                            CheckSubFilter(self.config,
+                                                           self.operation_db))

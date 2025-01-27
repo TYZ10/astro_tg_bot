@@ -70,7 +70,7 @@ class AnalyzingPersonalStrengths(BasicBotOperation):
 
         await state.clear()
 
-    async def create_router(self):
+    def create_router(self):
         self.router.callback_query(
             self.analyzing_personal_strengths,
             F.data == "start generation",

@@ -52,7 +52,7 @@ class StartAllGeneration(BasicBotOperation):
             reply_markup=keyboard
         )
 
-    async def create_router(self):
+    def create_router(self):
         self.router.message(
             self.start_generation,
             AllTypesGeneration()

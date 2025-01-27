@@ -139,7 +139,7 @@ class Predictions(BasicBotOperation):
 
         await state.clear()
 
-    async def create_router(self):
+    def create_router(self):
         self.router.callback_query(
             self.selection_predictions,
             F.data == "start generation",

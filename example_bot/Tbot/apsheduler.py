@@ -68,3 +68,6 @@ class ApshedulerBot(BasicBotOperation):
             self.scheduler.start()
         except:
             pass
+
+    def create_router(self):
+        print("start bot")

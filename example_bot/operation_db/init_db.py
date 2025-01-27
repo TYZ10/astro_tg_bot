@@ -1,10 +1,9 @@
 from psycopg2 import _psycopg
 
-from . import COLUMNS_INFO
-
 
 def init_db(cur: _psycopg.cursor, conn: _psycopg.connection,
             name_db: str, **kwargs):
+    from . import COLUMNS_INFO
 
     cur.execute(f'''CREATE TABLE IF NOT EXISTS "{name_db}"(
         {COLUMNS_INFO.userid} BIGINT PRIMARY KEY,

@@ -17,6 +17,7 @@ from .generation.start_generation import StartAllGeneration
 from . import (
     OperationDataBaseBot, ConfigBot
 )
+from .apsheduler import ApshedulerBot
 
 
 class InitHandlerBot:
@@ -60,8 +61,11 @@ class InitHandlerBot:
         self.start_all_generation = StartAllGeneration(
             config, operation_db, keyboard
         )
+        self.apscheduler = ApshedulerBot(config, operation_db, keyboard)
 
     async def register_all_handlers(self):
+        self.config.dp.startup(self.apscheduler.on_startup)
+
         self.config.dp.include_routers(
             self.help.router,
             self.main_menu.router,

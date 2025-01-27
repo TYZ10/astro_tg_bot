@@ -26,5 +26,5 @@ class BasicBotOperation(ABC):
         self.create_router()
 
     @abstractmethod
-    async def create_router(self):
+    def create_router(self):
         """Создание роутера"""

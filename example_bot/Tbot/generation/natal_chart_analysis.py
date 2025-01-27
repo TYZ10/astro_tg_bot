@@ -93,7 +93,7 @@ class NatalChartAnalysis(BasicBotOperation):
 
         await state.clear()
 
-    async def create_router(self):
+    def create_router(self):
         self.router.callback_query(
             self.natal_chart_analysis,
             F.data == "start generation",

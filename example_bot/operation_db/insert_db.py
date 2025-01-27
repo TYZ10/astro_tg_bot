@@ -1,12 +1,12 @@
 from psycopg2 import _psycopg
 
-from . import COLUMNS_INFO
-
 
 def insert_new_user(cur: _psycopg.cursor, conn: _psycopg.connection,
                     name_db: str, userid: str, full_name: str, username: str,
                     **kwargs) -> bool:
     """Добавление нового пользователя в БД, если новый вернёт True"""
+
+    from . import COLUMNS_INFO
     cur.execute(f'SELECT * FROM "{name_db}" WHERE userid = %s',
                 (userid,))
 

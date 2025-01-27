@@ -171,7 +171,7 @@ class MyDataBot(BasicBotOperation):
             await message.answer(text="Данные успешно сохранены.",
                                  reply_markup=self.keyboard.main_menu_kb)
 
-    async def create_router(self):
+    def create_router(self):
         self.router.message(self.my_data_handler, F.text == "Мои данные")
         self.router.callback_query(self.modify_my_data,
                                    F.text == "modify my data")

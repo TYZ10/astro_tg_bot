@@ -1,8 +1,7 @@
-from . import COLUMNS_INFO
-
-
 def update_user_info_db(dict_info: dict, userid, name_db: str,
                         cur, conn, **kwargs):
+    from . import COLUMNS_INFO
+
     sql = f'UPDATE "{name_db}" SET '
 
     info = dict_info.items()

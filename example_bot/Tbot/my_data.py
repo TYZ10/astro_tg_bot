@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from aiogram import types, F
@@ -59,13 +60,13 @@ class MyDataBot(BasicBotOperation):
         await state.update_data(is_partner=is_partner)
 
         if is_partner:
-            text = "Введите дату рождения партнёра в "
+            text = ("Введите дату рождения партнёра в "
             "формате YYYY MM DD.\n\n"
-            "Пример: 2000 01 21"
+            "Пример: 2000 01 21")
         else:
-            text = "Введите дату вашего рождения в "
+            text = ("Введите дату вашего рождения в "
             "формате YYYY MM DD.\n\n"
-            "Пример: 2000 01 21"
+            "Пример: 2000 01 21")
 
         await call.message.answer(text=text,
                                   reply_markup=self.keyboard.abolition_ikb)
@@ -76,10 +77,10 @@ class MyDataBot(BasicBotOperation):
             data_birth = datetime.strptime(data_birth, '%Y %m %d')
         except:
             await message.answer(
-                text="Введён неверный формат даты."
+                text=("Введён неверный формат даты."
                      "Введите дату рождения в "
                      "формате YYYY MM DD (год месяц день) числами!\n\n"
-                     "Пример: 2000 01 21",
+                     "Пример: 2000 01 21"),
                 reply_markup=self.keyboard.abolition_ikb)
             return
 
@@ -96,10 +97,10 @@ class MyDataBot(BasicBotOperation):
             time_birth = datetime.strptime(time_birth, '%H %M %S').time()
         except:
             await message.answer(
-                text="Введён неверный формат времени."
+                text=("Введён неверный формат времени."
                      "Введите время рождения в "
                      "формате HH MM SS (Часы минуты секунды) числами!\n\n"
-                     "Пример: 12 30 02",
+                     "Пример: 12 30 02"),
                 reply_markup=self.keyboard.abolition_ikb)
             return
         await message.answer(
@@ -119,7 +120,7 @@ class MyDataBot(BasicBotOperation):
         time_birth = st['time_birth']
         is_partner = st['is_partner']
 
-        result = await self.config.geocoder.geocode_async(
+        result = self.config.geocoder.geocode(
             place_birth,
             language='ru'
         )
@@ -127,10 +128,14 @@ class MyDataBot(BasicBotOperation):
             latitude = result['results'][0]['geometry']['lat'] # Широта
             longitude = result['results'][0]['geometry']['lng'] # Долгота
         except:
-            await message.answer(
-                text="Введите место рождения точнее.",
-                reply_markup=self.keyboard.aboцlition_ikb)
-            return
+            try:
+                latitude = result[0]['geometry']['lat']  # Широта
+                longitude = result[0]['geometry']['lng']  # Долгота
+            except:
+                await message.answer(
+                    text="Введите место рождения точнее.",
+                    reply_markup=self.keyboard.abolition_ikb)
+                return
 
         await state.clear()
 
@@ -139,11 +144,11 @@ class MyDataBot(BasicBotOperation):
 
             (place_birth_2, latitude_2, longitude_2, time_birth_2,
              data_birth_2) = self.operation_db.select_user_info_db(
-                f"({col_info.place_birth},"
+                f"{col_info.place_birth},"
                 f"{col_info.latitude},"
                 f"{col_info.longitude},"
                 f"{col_info.time_birth},"
-                f"{col_info.data_birth})",
+                f"{col_info.data_birth}",
                 message.from_user.id,
                 many=True
             )
@@ -175,7 +180,7 @@ class MyDataBot(BasicBotOperation):
     def create_router(self):
         self.router.message.register(self.my_data_handler, F.text == "Мои данные")
         self.router.callback_query.register(self.modify_my_data,
-                                   F.text == "modify my data")
+                                   F.data == "modify my data")
         self.router.message.register(self.get_data_birth,
                             StateFilter(states.data_birth))
         self.router.message.register(self.get_time_birth,

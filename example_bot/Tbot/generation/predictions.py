@@ -39,7 +39,8 @@ class Predictions(BasicBotOperation):
                 await call.message.answer(
                     text="Этот период закрыт, что бы получить к нему доступ "
                          "нужна платная подписка! Выберите другой период или "
-                         "оплатите подписку и повторите выбор."
+                         "оплатите подписку и повторите выбор.",
+                    reply_markup=self.keyboard.payments_ikb
                 )
                 return
 
@@ -85,17 +86,17 @@ class Predictions(BasicBotOperation):
 
         (place_birth, latitude, longitude, time_birth,
          data_birth) = self.operation_db.select_user_info_db(
-            f"({col_info.place_birth},"
-            f"{col_info.latitude},"
-            f"{col_info.longitude},"
-            f"{col_info.time_birth},"
-            f"{col_info.data_birth})",
+            f"{col_info.place_birth}, "
+            f"{col_info.latitude}, "
+            f"{col_info.longitude}, "
+            f"{col_info.time_birth}, "
+            f"{col_info.data_birth}",
             call.from_user.id,
             many=True
         )
 
         aspects = create_aspects(
-            data_birth,
+            f"{data_birth} {time_birth}",
             latitude,
             longitude
         )
@@ -114,8 +115,8 @@ class Predictions(BasicBotOperation):
         )
         (count_generation,
          generation_count_all) = self.operation_db.select_user_info_db(
-            f"({self.operation_db.COLUMNS_INFO.generation_count}, "
-            f"{self.operation_db.COLUMNS_INFO.generation_count_all})",
+            f"{self.operation_db.COLUMNS_INFO.generation_count}, "
+            f"{self.operation_db.COLUMNS_INFO.generation_count_all}",
             call.from_user.id,
             many=True
         )
@@ -129,7 +130,7 @@ class Predictions(BasicBotOperation):
         )
 
         await call.message.answer(
-            text=text_gpt
+            text=str(text_gpt)
         )
 
         await call.message.answer(

@@ -59,7 +59,7 @@ class AllTypesGeneration(BaseFilter):
     def __getitem__(self, item):
         return self.types[item]
 
-    def __call__(self, message: Message) -> bool:
+    async def __call__(self, message: Message) -> bool:
         text = message.text
 
         if (

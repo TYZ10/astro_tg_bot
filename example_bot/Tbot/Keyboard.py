@@ -91,6 +91,12 @@ class KeyboardBot:
                 "Нет": "main menu",
             }
         )
+        self.no_generation_data_ikb = self.__inline_kb(
+            {
+                "Ввести данные.": "modify my data",
+                "Главное меню.": "main menu",
+            }
+        )
 
     def create_payments_ikb(self, url, id):
         kb_payment = InlineKeyboardBuilder()

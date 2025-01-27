@@ -26,7 +26,6 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
             state: FSMContext
     ):
         """Анализ совместимости в отношениях"""
-        await message.message.answer("Ожидайте...")
 
         (place_birth_user, latitude_user, longitude_user, time_birth_user,
          data_birth_user) = info_user
@@ -34,7 +33,7 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
          time_birth_partner, data_birth_partner) = info_partner
 
         aspects_user = create_aspects(
-            data_birth_user,
+            f"{data_birth_user} {time_birth_user}",
             latitude_user,
             longitude_user
         )
@@ -51,8 +50,8 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
         )
         (count_generation,
          generation_count_all) = self.operation_db.select_user_info_db(
-            f"({self.operation_db.COLUMNS_INFO.generation_count}, "
-            f"{self.operation_db.COLUMNS_INFO.generation_count_all})",
+            f"{self.operation_db.COLUMNS_INFO.generation_count}, "
+            f"{self.operation_db.COLUMNS_INFO.generation_count_all}",
             message.from_user.id,
             many=True
         )
@@ -66,7 +65,7 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
         )
 
         await message.answer(
-            text=text_gpt
+            text=str(text_gpt)
         )
 
         await message.answer(

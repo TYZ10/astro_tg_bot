@@ -46,17 +46,17 @@ class NatalChartAnalysis(BasicBotOperation):
 
         (place_birth, latitude, longitude, time_birth,
          data_birth) = self.operation_db.select_user_info_db(
-            f"({col_info.place_birth},"
-            f"{col_info.latitude},"
-            f"{col_info.longitude},"
-            f"{col_info.time_birth},"
-            f"{col_info.data_birth})",
+            f"{col_info.place_birth}, "
+            f"{col_info.latitude}, "
+            f"{col_info.longitude}, "
+            f"{col_info.time_birth}, "
+            f"{col_info.data_birth}",
             call.from_user.id,
             many=True
         )
 
         aspects = create_aspects(
-            data_birth,
+            f"{data_birth} {time_birth}",
             latitude,
             longitude
         )
@@ -68,8 +68,8 @@ class NatalChartAnalysis(BasicBotOperation):
         )
         (count_generation,
          generation_count_all) = self.operation_db.select_user_info_db(
-            f"({self.operation_db.COLUMNS_INFO.generation_count}, "
-            f"{self.operation_db.COLUMNS_INFO.generation_count_all})",
+            f"{self.operation_db.COLUMNS_INFO.generation_count}, "
+            f"{self.operation_db.COLUMNS_INFO.generation_count_all}",
             call.from_user.id,
             many=True
         )
@@ -83,7 +83,7 @@ class NatalChartAnalysis(BasicBotOperation):
         )
 
         await call.message.answer(
-            text=text_gpt
+            text=str(text_gpt)
         )
 
         await call.message.answer(

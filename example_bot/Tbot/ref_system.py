@@ -3,7 +3,7 @@ from aiogram import types, F
 from . import BasicBotOperation
 
 
-class MyDataBot(BasicBotOperation):
+class RefSystemBot(BasicBotOperation):
     async def my_ref_handler(self, message: types.Message):
 
         col_info = self.operation_db.COLUMNS_INFO

@@ -6,8 +6,7 @@ bot = TelegramBot()
 
 
 async def main():
-    pass
-    # await bot.start_bot()
+    await bot.start_bot()
     
     
 if __name__ == "__main__":

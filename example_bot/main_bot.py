@@ -12,7 +12,7 @@ class TelegramBot:
             self.config.POSTGRESQL_USER,
             self.config.POSTGRESQL_PASSWORD,
             self.config.POSTGRESQL_DBNAME,
-            is_delete_db=False # УДАЛЯЕТ АБСОЛЮТНО ВСЮ ИНФОРМАЦИЮ БЕЗВОЗВРАТНО!!!!!
+            is_delete_db=True # УДАЛЯЕТ АБСОЛЮТНО ВСЮ ИНФОРМАЦИЮ БЕЗВОЗВРАТНО!!!!!
         )
         self.keyboard: KeyboardBot = KeyboardBot(self.config)
 

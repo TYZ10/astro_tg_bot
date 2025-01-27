@@ -32,20 +32,27 @@ class StartBot(BasicBotOperation):
             ref_userid = message.text.split(' ', 1)[-1]
             if ref_userid != '/start':
                 ref_userid = int(ref_userid)
+                print(ref_userid)
 
                 col_info = self.operation_db.COLUMNS_INFO
 
                 referral_all_count_user = \
                     self.operation_db.select_user_info_db(
                         col_info.referral_all_count_user,
-                        message.from_user.id
+                        ref_userid
                     )
 
                 self.operation_db.update_user_info_db(
                     {
-                        col_info.referral_user: ref_userid,
                         col_info.referral_all_count_user:
                             referral_all_count_user + 1
+                    },
+                    ref_userid
+                )
+
+                self.operation_db.update_user_info_db(
+                    {
+                        col_info.referral_user: ref_userid
                     },
                     message.from_user.id
                 )

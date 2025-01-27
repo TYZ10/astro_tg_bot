@@ -22,5 +22,5 @@ class CheckSubFilter(BaseFilter):
             },
             userid
         )
-
-        return not (await check_sub(message_or_call.bot, self.config, userid))
+        result = not(await check_sub(message_or_call.bot, self.config, userid))
+        return result

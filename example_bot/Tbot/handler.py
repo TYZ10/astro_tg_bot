@@ -69,11 +69,11 @@ class InitHandlerBot:
         self.config.dp.startup.register(self.apscheduler.on_startup)
 
         self.config.dp.include_routers(
+            self.start.router,
             self.help.router,
             self.main_menu.router,
             self.payments.router,
             self.ref_system.router,
-            self.start.router,
             self.analyzing_compatibility_relationship.router,
             self.my_data.router,
             self.analyzing_personal_strengths.router,

@@ -22,6 +22,6 @@ def init_db(cur: _psycopg.cursor, conn: _psycopg.connection,
         {COLUMNS_INFO.referrals_count} INTEGER DEFAULT 0,
         {COLUMNS_INFO.referral_user} BIGINT DEFAULT NULL,
         {COLUMNS_INFO.generation_count_all} INTEGER DEFAULT 0,
-        {COLUMNS_INFO.payments_token} VARCHAR(100) DEFAULT NULL
+        {COLUMNS_INFO.payments_id} VARCHAR(100) DEFAULT NULL
     )''')
     conn.commit()

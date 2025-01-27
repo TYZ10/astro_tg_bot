@@ -47,7 +47,8 @@ class AnalyzingPersonalStrengths(BasicBotOperation):
          generation_count_all) = self.operation_db.select_user_info_db(
             f"({self.operation_db.COLUMNS_INFO.generation_count}, "
             f"{self.operation_db.COLUMNS_INFO.generation_count_all})",
-            call.from_user.id
+            call.from_user.id,
+            many=True
         )
 
         self.operation_db.update_user_info_db(

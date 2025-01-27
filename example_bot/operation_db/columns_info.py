@@ -19,7 +19,7 @@ class ColumnsInfoDB:
 
         self.referrals_count = "referrals_count"
         self.referral_user = "referral_user"
-        self.payments_token = "payments_token"
+        self.payments_id = "payments_id"
 
 
 COLUMNS_INFO = ColumnsInfoDB()

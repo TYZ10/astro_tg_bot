@@ -20,6 +20,7 @@ class KeyboardBot:
 
         self.main_menu_kb = self.__reply_kb(
             [
+                "Оплата подписки",
                 "Анализ натальной карты",
                 "Прогнозы",
                 "Реферальная система",
@@ -76,6 +77,29 @@ class KeyboardBot:
             },
             adjust_count=2
         )
+
+        self.payments_ikb = self.__inline_kb(
+            {
+                "Продлить подписку": "payments",
+                "Главное меню": "main menu",
+            }
+        )
+
+        self.ref_payments_ikb = self.__inline_kb(
+            {
+                "Да": "ref payments",
+                "Нет": "main menu",
+            }
+        )
+
+    def create_payments_ikb(self, url, id):
+        kb_payment = InlineKeyboardBuilder()
+        kb_payment.button(text="Оплатить", url=url)
+        kb_payment.button(text="Проверить оплату",
+                          callback_data=f"check payment_{id}")
+        kb_payment.button(text="Отменить оплату",
+                          callback_data="main menu")
+        return kb_payment.as_markup()
 
     def __inline_kb(
             self,

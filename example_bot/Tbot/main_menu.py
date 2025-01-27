@@ -20,5 +20,5 @@ class MainMenuBot(BasicBotOperation):
         await self.main_menu(call.message, state)
 
     def create_router(self):
-        self.router.callback_query(F.data == 'main menu',
-                                   self.main_menu_call)
+        self.router.callback_query.register(self.main_menu_call,
+                                   F.data == 'main menu',)

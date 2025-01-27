@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram.filters.command import Command
 from aiogram import types
 from aiogram.fsm.context import FSMContext
@@ -21,6 +23,8 @@ class StartBot(BasicBotOperation):
                  f"астрономическими функциями.",
             reply_markup=self.keyboard.main_menu_kb
         )
+
+        await asyncio.sleep(1)
 
         if is_new_user:
             await self.subscribe(message, state)

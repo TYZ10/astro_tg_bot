@@ -70,7 +70,7 @@ class HoroscopeForBusiness(BasicBotOperation):
         await state.clear()
 
     def create_router(self):
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.horoscope_for_business,
             F.data == "start generation",
             StateFilter(AllTypesGeneration.horoscope_for_business.state)

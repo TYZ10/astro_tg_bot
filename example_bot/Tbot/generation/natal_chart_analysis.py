@@ -94,16 +94,16 @@ class NatalChartAnalysis(BasicBotOperation):
         await state.clear()
 
     def create_router(self):
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.natal_chart_analysis,
             F.data == "start generation",
             StateFilter(AllTypesGeneration.natal_chart_analysis.state)
         )
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.natal_chart_analysis_1_aspect,
             StateFilter(states.natal_chart_analysis_1_aspect)
         )
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.natal_chart_analysis_2_aspect,
             StateFilter(states.natal_chart_analysis_2_aspect)
         )

@@ -63,8 +63,10 @@ class InitHandlerBot:
         )
         self.apscheduler = ApshedulerBot(config, operation_db, keyboard)
 
-    async def register_all_handlers(self):
-        self.config.dp.startup(self.apscheduler.on_startup)
+        self.__register_all_handlers()
+
+    def __register_all_handlers(self):
+        self.config.dp.startup.register(self.apscheduler.on_startup)
 
         self.config.dp.include_routers(
             self.help.router,

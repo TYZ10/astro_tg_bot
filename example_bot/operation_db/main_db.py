@@ -4,11 +4,13 @@ from .init_db import init_db
 from .insert_db import insert_new_user
 from .select_db import select_user_info_db, select_all_user_info_db
 from .update_db import update_user_info_db, update_all_user_info_db
+from .delete_db import delete_db
 
 
 class OperationDataBaseBot:
-    def __init__(self, name_db: str,
-                 ps_user: str, ps_password: str, ps_dbname: str):
+    def __init__(self, name_db: str, ps_user: str,
+                 ps_password: str, ps_dbname: str,
+                 is_delete_db: bool = False):
         from . import ColumnsInfoDB, COLUMNS_INFO
 
         self.name_db: str = name_db
@@ -21,6 +23,9 @@ class OperationDataBaseBot:
         )
 
         self.cur: _psycopg.cursor = self.conn.cursor()
+
+        if is_delete_db:
+            self.__delete_db()
 
         self.__operation_db(init_db)
 
@@ -66,4 +71,10 @@ class OperationDataBaseBot:
         self.__operation_db(
             update_all_user_info_db,
             dict_info=dict_info,
+        )
+
+    def __delete_db(self):
+        """НЕ РЕКОМЕНДУЕТСЯ ИСПОЛЬЗОВАТЬ ТАК КАК УДАЛЯЕТ ВСЮ ТАБЛИЦУ!!"""
+        self.__operation_db(
+            delete_db
         )

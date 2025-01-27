@@ -140,21 +140,21 @@ class Predictions(BasicBotOperation):
         await state.clear()
 
     def create_router(self):
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.selection_predictions,
             F.data == "start generation",
             StateFilter(AllTypesGeneration.predictions.state)
         )
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.get_predictions,
             F.data.split("_")[0] == "select prediction",
             StateFilter(AllTypesGeneration.predictions.state)
         )
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.predictions_1_aspect,
             StateFilter(states.predictions_1_aspect)
         )
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.predictions_2_aspect,
             StateFilter(states.predictions_2_aspect)
         )

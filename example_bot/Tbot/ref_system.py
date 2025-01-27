@@ -26,5 +26,5 @@ class RefSystemBot(BasicBotOperation):
         )
 
     def create_router(self):
-        self.router.message(F.text == "Реферальная система",
-                            self.my_ref_handler)
+        self.router.message.register(self.my_ref_handler,
+                            F.text == "Реферальная система")

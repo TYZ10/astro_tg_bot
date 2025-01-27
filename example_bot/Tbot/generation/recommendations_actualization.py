@@ -71,7 +71,7 @@ class RecommendationsActualization(BasicBotOperation):
         await state.clear()
 
     def create_router(self):
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.recommendations_actualization,
             F.data == "start generation",
             StateFilter(

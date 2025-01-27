@@ -172,21 +172,19 @@ class MyDataBot(BasicBotOperation):
                                  reply_markup=self.keyboard.main_menu_kb)
 
     def create_router(self):
-        self.router.message(self.my_data_handler, F.text == "Мои данные")
-        self.router.callback_query(self.modify_my_data,
+        self.router.message.register(self.my_data_handler, F.text == "Мои данные")
+        self.router.callback_query.register(self.modify_my_data,
                                    F.text == "modify my data")
-        self.router.message(self.get_data_birth,
+        self.router.message.register(self.get_data_birth,
                             StateFilter(states.data_birth))
-        self.router.message(self.get_time_birth,
+        self.router.message.register(self.get_time_birth,
                             StateFilter(states.time_birth))
-        self.router.message(self.get_place_birth,
+        self.router.message.register(self.get_place_birth,
                             StateFilter(states.place_birth))
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.modify_my_data,
             F.data == "start generation",
             StateFilter(
                 AllTypesGeneration.analyzing_compatibility_relationship.state
             )
         )
-
-

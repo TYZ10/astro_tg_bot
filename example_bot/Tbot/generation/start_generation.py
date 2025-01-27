@@ -53,7 +53,7 @@ class StartAllGeneration(BasicBotOperation):
         )
 
     def create_router(self):
-        self.router.message(
+        self.router.message.register(
             self.start_generation,
             AllTypesGeneration()
         )

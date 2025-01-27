@@ -12,5 +12,5 @@ class HelpBot(BasicBotOperation):
                              reply_markup=self.keyboard.main_menu_kb)
 
     def create_router(self):
-        self.router.message(Command('help'), self.help_handler)
-        self.router.message(F.text == "Помощь", self.help_handler)
+        self.router.message.register(self.help_handler, Command('help'))
+        self.router.message.register(self.help_handler, F.text == "Помощь")

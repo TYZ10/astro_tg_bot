@@ -70,7 +70,7 @@ class AstrologicalForecastHealth(BasicBotOperation):
         await state.clear()
 
     def create_router(self):
-        self.router.callback_query(
+        self.router.callback_query.register(
             self.astrological_forecast_health,
             F.data == "start generation",
             StateFilter(AllTypesGeneration.astrological_forecast_health.state)

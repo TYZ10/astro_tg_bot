@@ -19,6 +19,8 @@ class ColumnsInfoDB:
 
         self.referrals_count = "referrals_count"
         self.referral_user = "referral_user"
+        self.referral_all_count_user = "referral_all_count_user"
+        self.referral_all_count_points_user = "referral_all_count_points_user"
         self.payments_id = "payments_id"
 
 

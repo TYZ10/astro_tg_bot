@@ -30,6 +30,7 @@ class ConfigBot:
         self.POSTGRESQL_USER: str = env.str("POSTGRESQL_USER")
         self.POSTGRESQL_PASSWORD: str = env.str("POSTGRESQL_PASSWORD")
         self.POSTGRESQL_DBNAME: str = env.str("POSTGRESQL_DBNAME")
+        self.POSTGRESQL_TABLE_NAME: str = env.str("POSTGRESQL_TABLE_NAME")
 
         #https://opencagedata.com/api
         location_api_key: str = env.str("LOCATION_API_KEY")

@@ -7,11 +7,9 @@ from .update_db import update_user_info_db, update_all_user_info_db
 
 
 class OperationDataBaseBot:
-    from . import COLUMNS_INFO
-
-    def __init__(self, name_db: str, COLUMNS_INFO,
+    def __init__(self, name_db: str,
                  ps_user: str, ps_password: str, ps_dbname: str):
-        from .columns_info import ColumnsInfoDB
+        from .columns_info import ColumnsInfoDB, COLUMNS_INFO
 
         self.name_db: str = name_db
         self.COLUMNS_INFO: ColumnsInfoDB = COLUMNS_INFO

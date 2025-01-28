@@ -106,7 +106,7 @@ class ApshedulerBot(BasicBotOperation):
 
     async def on_startup(self):
         self.scheduler.add_job(self.update_count_generation,
-                               'cron', hour=17, minute=25)
+                               'cron', hour=0, minute=0)
         try:
             self.scheduler.start()
         except:

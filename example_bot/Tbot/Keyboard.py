@@ -52,6 +52,7 @@ class KeyboardBot:
             {
                 "Использовать предыдущие данные.": "start generation",
                 "Ввести новые данные.": "modify my data",
+                "Отменить генерацию.": "main menu",
             }
         )
 

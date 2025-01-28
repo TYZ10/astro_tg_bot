@@ -19,11 +19,14 @@ class ApshedulerBot(BasicBotOperation):
         )
 
     async def update_count_generation(self):
+
+        await self.get_report()
+
         col_info = self.operation_db.COLUMNS_INFO
 
         all_info = self.operation_db.select_all_user_info_db(
-            f"({col_info.userid}, {col_info.payments_end}, "
-            f"{col_info.last_action})"
+            f"{col_info.userid}, {col_info.payments_end}, "
+            f"{col_info.last_action}"
         )
 
         self.operation_db.update_all_user_info_db(
@@ -61,9 +64,49 @@ class ApshedulerBot(BasicBotOperation):
                     chat_id=userid
                 )
 
+    async def get_report(self):
+        result = self.operation_db.select_all_user_info_db(
+            f"{self.operation_db.COLUMNS_INFO.first_arrival}, "
+            f"{self.operation_db.COLUMNS_INFO.generation_count}, "
+            f"{self.operation_db.COLUMNS_INFO.payments_end}, "
+            f"{self.operation_db.COLUMNS_INFO.referral_user}"
+        )
+
+        count_new_user = 0
+        count_generations = 0
+        count_referrals_user = 0
+
+        for first_arrival, generation_count, payments_end, \
+                referral_user in result:
+            if get_hour_or_day(first_arrival) <= 1:
+                count_new_user += 1
+                if referral_user:
+                    count_referrals_user += 1
+
+            try:
+                if payments_end and \
+                        get_hour_or_day(payments_end, get_hour=True) != 0:
+                    count_generations += 10 - generation_count
+                else:
+                    count_generations += 4 - generation_count
+            except:
+                count_generations += 4 - generation_count
+
+        for i in self.config.ADMINS_ID:
+            try:
+                await self.config.bot.send_message(
+                    text=(f"Отчёт за сегодня:\n\n"
+                          f"Новых пользователей: {count_new_user}\n"
+                          f"Генераций: {count_generations}\n"
+                          f"Рефералов: {count_referrals_user}\n"),
+                    chat_id=i
+                )
+            except:
+                pass
+
     async def on_startup(self):
         self.scheduler.add_job(self.update_count_generation,
-                               'cron', hour=0, minute=0)
+                               'cron', hour=17, minute=25)
         try:
             self.scheduler.start()
         except:

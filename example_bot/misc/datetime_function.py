@@ -12,7 +12,10 @@ def get_day_and_hours_from_date(
         return 0
 
     # Укажите дату окончания
-    end_date = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
+    try:
+        end_date = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
+    except:
+        end_date = date_string
 
     # Получите текущую дату и время
     now = datetime.now()

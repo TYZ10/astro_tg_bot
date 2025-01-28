@@ -65,11 +65,9 @@ class ApshedulerBot(BasicBotOperation):
         self.scheduler.add_job(self.update_count_generation,
                                'cron', hour=0, minute=0)
         try:
-            info = await self.config.bot.get_me()
-            print(info.url, "start bot")
             self.scheduler.start()
         except:
             pass
 
     def create_router(self):
-        pass
+        print("start bot")

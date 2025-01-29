@@ -197,7 +197,7 @@ class MyDataBot(BasicBotOperation):
                                  reply_markup=self.keyboard.main_menu_kb)
 
     def create_router(self):
-        self.router.message.register(self.my_data_handler, F.text == "Мои данные")
+        self.router.message.register(self.my_data_handler, F.text == "⚙️ Изменить данные")
         self.router.callback_query.register(self.modify_my_data,
                                    F.data == "modify my data")
         self.router.message.register(self.get_data_birth,

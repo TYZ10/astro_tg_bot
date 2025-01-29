@@ -32,4 +32,4 @@ class HelpBot(BasicBotOperation):
 
     def create_router(self):
         self.router.message.register(self.help_handler, Command('help'))
-        self.router.message.register(self.help_handler, F.text == "Помощь")
+        self.router.message.register(self.help_handler, F.text == "❓ Помощь")

@@ -42,4 +42,4 @@ class RefSystemBot(BasicBotOperation):
 
     def create_router(self):
         self.router.message.register(self.my_ref_handler,
-                            F.text == "Реферальная система")
+                            F.text == "🎁 Реферальная система")

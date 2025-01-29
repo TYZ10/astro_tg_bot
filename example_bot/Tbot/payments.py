@@ -193,7 +193,7 @@ class PaymentsBot(BasicBotOperation):
 
     def create_router(self):
         self.router.message.register(self.start_payments,
-                                     F.text == "Оплата подписки")
+                                     F.text == "💳 Оплата подписки")
         self.router.message.register(self.start_payments_call,
                                      F.data == "payments")
         self.router.callback_query.register(

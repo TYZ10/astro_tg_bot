@@ -6,18 +6,9 @@ from . import BasicBotOperation
 
 
 class RefSystemBot(BasicBotOperation):
-    async def my_ref_handler(self, message: types.Message):
-
-        col_info = self.operation_db.COLUMNS_INFO
-
+    async def my_ref_handler(self, call: types.CallbackQuery):
         try:
-            count_user, count_point = self.operation_db.select_user_info_db(
-                f"{col_info.referral_all_count_user}, "
-                f"{col_info.referral_all_count_points_user}",
-                message.from_user.id,
-                many=True
-            )
-            await message.answer(
+            await call.message.answer(
                 text=f"""✨ Хочешь получить подписку бесплатно? У нас есть простая и удобная реферальная система, которая поможет тебе это сделать.
 
 Как это работает:
@@ -31,15 +22,13 @@ class RefSystemBot(BasicBotOperation):
 🔄 Увеличенное количество генераций — до 8 в день вместо 4.
 Чем больше друзей ты пригласишь, тем больше бонусов получишь! Делись своей ссылкой, наслаждайся звёздными подсказками и используй возможности бота на максимум. 🌟
 
-<code>{self.config.URL_BOT}?start={message.from_user.id}</code>""",
+<code>{self.config.URL_BOT}?start={call.from_user.id}</code>""",
                 parse_mode="HTML",
                 reply_markup=self.keyboard.main_menu_kb
             )
         except Exception as e:
             logging.error(e, exc_info=True)
 
-
-
     def create_router(self):
-        self.router.message.register(self.my_ref_handler,
-                            F.text == "🎁 Реферальная система")
+        self.router.callback_query.register(self.my_ref_handler,
+                                    F.data == "🎁 Реферальная система")

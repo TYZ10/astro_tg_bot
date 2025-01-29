@@ -8,17 +8,27 @@ from example_bot.Tbot import BasicBotOperation
 class StartAllGeneration(BasicBotOperation):
     # Начало любой генерации
 
-    async def start_generation(self,
-                               message: types.Message,
-                               state: FSMContext):
+    async def start_generation(
+            self,
+            message_or_call: types.Message or types.CallbackQuery,
+            state: FSMContext):
         col_info = self.operation_db.COLUMNS_INFO
+
+        userid = message_or_call.from_user.id
+
+        if isinstance(message_or_call, types.Message):
+            text_correct = message_or_call.text
+            answer = message_or_call.answer
+        else:
+            text_correct = message_or_call.data
+            answer = message_or_call.message.answer
 
         count_generation, referral_user, generation_count_all = \
             self.operation_db.select_user_info_db(
                 f"{col_info.generation_count}, "
                 f"{col_info.referral_user},"
                 f"{col_info.generation_count_all}",
-                message.from_user.id,
+                userid,
                 many=True
             )
 
@@ -43,13 +53,13 @@ class StartAllGeneration(BasicBotOperation):
                     {
                         col_info.referral_user: None
                     },
-                    message.from_user.id
+                    userid
                 )
 
         if count_generation > 0:
             place_birth = self.operation_db.select_user_info_db(
                 col_info.place_birth,
-                message.from_user.id,
+                userid,
             )
             if place_birth:
                 text = """🔮 Готовы к новому прогнозу? Вы можете использовать уже сохранённые результаты или ввести новые данные, если что-то изменилось.
@@ -60,23 +70,23 @@ class StartAllGeneration(BasicBotOperation):
 
 Выбирайте удобный вариант и двигаемся дальше! ✨"""
                 keyboard = self.keyboard.start_generation_ikb
-                await state.set_state(AllTypesGeneration()[message.text])
+                await state.set_state(AllTypesGeneration()[text_correct])
             else:
                 text = "Перед началом генерации нужно ввести ваши данные."
                 keyboard = self.keyboard.no_generation_data_ikb
                 await state.clear()
 
-        elif message.from_user.id in self.config.ADMINS_ID and \
-                count_generation > 0:
+        elif userid in self.config.ADMINS_ID and \
+                count_generation <= 0:
             self.operation_db.update_user_info_db(
                 {
                     col_info.generation_count: 4
                 },
-                userid=message.from_user.id,
+                userid=userid,
             )
-            text = ("Я узнал вас администратор, обновляю ваши генерации. Можете проболжать.")
+            text = ("Я узнал вас администратор, обновляю ваши генерации. Можете продолжать.")
             keyboard = self.keyboard.start_generation_ikb
-            await state.set_state(AllTypesGeneration()[message.text])
+            await state.set_state(AllTypesGeneration()[text_correct])
 
         else:
             text = ("Вы использовали все доступные генерации. "
@@ -84,13 +94,17 @@ class StartAllGeneration(BasicBotOperation):
             keyboard = self.keyboard.main_menu_kb
             await state.clear()
 
-        await message.answer(
+        await answer(
             text=text,
             reply_markup=keyboard
         )
 
     def create_router(self):
         self.router.message.register(
+            self.start_generation,
+            AllTypesGeneration()
+        )
+        self.router.callback_query.register(
             self.start_generation,
             AllTypesGeneration()
         )

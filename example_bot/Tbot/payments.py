@@ -10,15 +10,18 @@ from example_bot.misc.datetime_function import create_new_payments_end
 
 class PaymentsBot(BasicBotOperation):
 
-    async def __check_and_update_info_payments(self, payments_id,
-                                       message: types.Message):
+    async def __check_and_update_info_payments(
+            self,
+            payments_id,
+            message_or_call: types.Message or types.CallbackQuery
+    ):
         col_info = self.operation_db.COLUMNS_INFO
 
         if payments_id:
             if self.check_user_payments(payments_id):
                 payments_end = self.operation_db.select_user_info_db(
                     col_info.payments_end,
-                    message.from_user.id
+                    message_or_call.from_user.id
                 )
                 new_pay_end_date = create_new_payments_end(payments_end)
 
@@ -27,21 +30,29 @@ class PaymentsBot(BasicBotOperation):
                         col_info.payments_id: None,
                         col_info.payments_end: new_pay_end_date
                     },
-                    message.from_user.id
+                    message_or_call.from_user.id
                 )
 
-                await message.answer(
-                    text="Я заметил не проверенную вами оплату подписки, "
-                         "продлеваю вашу подписку.",
-                    reply_markup=self.keyboard.main_menu_kb,
-                )
+                if isinstance(message_or_call, types.Message):
+                    await message_or_call.answer(
+                        text="Я заметил не проверенную вами оплату подписки, "
+                             "продлеваю вашу подписку.",
+                        reply_markup=self.keyboard.main_menu_kb,
+                    )
+                else:
+                    await message_or_call.message.answer(
+                        text="Я заметил не проверенную вами оплату подписки, "
+                             "продлеваю вашу подписку.",
+                        reply_markup=self.keyboard.main_menu_kb,
+                    )
+
                 return True
             else:
                 self.operation_db.update_user_info_db(
                     {
                         col_info.payments_id: None
                     },
-                    message.from_user.id
+                    message_or_call.from_user.id
                 )
 
     def __create_payments(self):
@@ -78,19 +89,19 @@ class PaymentsBot(BasicBotOperation):
         except:
             return False
 
-    async def start_payments(self, message: types.Message):
+    async def start_payments(self, call: types.CallbackQuery):
         col_info = self.operation_db.COLUMNS_INFO
 
         referrals_count, payments_id = self.operation_db.select_user_info_db(
             f"{col_info.referrals_count}, {col_info.payments_id}",
-            message.from_user.id,
+            call.from_user.id,
             many=True
         )
 
-        if await self.__check_and_update_info_payments(payments_id, message):
+        if await self.__check_and_update_info_payments(payments_id, call):
             return
 
-        await message.answer(
+        await call.message.answer(
             text="""✨ Наш бот создан, чтобы делиться магией астрологии с тобой совершенно бесплатно! 💫
 
 Ты можешь получить доступ к ежедневным прогнозам двумя способами:
@@ -101,7 +112,7 @@ class PaymentsBot(BasicBotOperation):
         )
 
         if referrals_count >= 2:
-            await message.answer(
+            await call.message.answer(
                 text=f"Вам хватает реферальных баллов для оплаты подписки "
                      f"(спишется 2 реферальных балла), оплачиваем подписку?",
                 reply_markup=self.keyboard.ref_payments_ikb,
@@ -116,10 +127,10 @@ class PaymentsBot(BasicBotOperation):
                 {
                     col_info.payments_id: pay_id
                 },
-                message.from_user.id
+                call.from_user.id
             )
 
-            await message.answer(
+            await call.message.answer(
                 text=f"У вас не хватает реферальных баллов для оплаты "
                      f"подписки, (у вас {referrals_count} баллов, для оплаты "
                      f"нужно 2 балла), поэтому можете приобрести подписку за "
@@ -131,9 +142,6 @@ class PaymentsBot(BasicBotOperation):
                     id=pay_id,
                 ),
             )
-
-    async def start_payments_call(self, call: types.CallbackQuery):
-        await self.start_payments(call.message)
 
     async def ref_payments(self, call: types.CallbackQuery):
         col_info = self.operation_db.COLUMNS_INFO
@@ -187,9 +195,7 @@ class PaymentsBot(BasicBotOperation):
             )
 
     def create_router(self):
-        self.router.message.register(self.start_payments,
-                                     F.text == "💳 Оплата подписки")
-        self.router.message.register(self.start_payments_call,
+        self.router.callback_query.register(self.start_payments,
                                      F.data == "payments")
         self.router.callback_query.register(
             self.check_payments,

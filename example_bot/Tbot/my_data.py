@@ -21,13 +21,13 @@ class MyDataBot(BasicBotOperation):
         )
         self.analyz_rel: AnalyzingCompatibilityRelationship = analyz_rel
 
-    async def my_data_handler(self, message: types.Message):
+    async def my_data_handler(self, call: types.CallbackQuery):
         col_info = self.operation_db.COLUMNS_INFO
 
         data_birth, time_birth, place_birth = self.operation_db.select_user_info_db(
             f"{col_info.data_birth}, {col_info.time_birth}, "
             f"{col_info.place_birth}",
-            message.from_user.id,
+            call.from_user.id,
             many=True
         )
 
@@ -36,7 +36,7 @@ class MyDataBot(BasicBotOperation):
             time_birth = "Отсутствует"
             place_birth = "Отсутствует"
 
-        await message.answer(
+        await call.message.answer(
             text=f"""🔄 В этом разделе ты можешь изменить свои данные, которые бот использует для астрологических расчётов.
 
 Что происходит после изменения?
@@ -197,7 +197,7 @@ class MyDataBot(BasicBotOperation):
                                  reply_markup=self.keyboard.main_menu_kb)
 
     def create_router(self):
-        self.router.message.register(self.my_data_handler, F.text == "⚙️ Изменить данные")
+        self.router.callback_query.register(self.my_data_handler, F.data == "⚙️ Изменить данные")
         self.router.callback_query.register(self.modify_my_data,
                                    F.data == "modify my data")
         self.router.message.register(self.get_data_birth,

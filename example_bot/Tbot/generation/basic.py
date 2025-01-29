@@ -1,6 +1,6 @@
 from aiogram.fsm.state import State
 from aiogram.filters import BaseFilter
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 
 
 class TypeGeneration:
@@ -17,7 +17,7 @@ class AllTypesGeneration(BaseFilter):
         states.natal_chart_analysis
     )
     predictions: TypeGeneration = TypeGeneration(
-        "☀️ Прогнозы",
+        "🌟 Прогнозы и гороскопы",
         states.predictions
     )
     horoscope_for_business: TypeGeneration = TypeGeneration(
@@ -33,7 +33,7 @@ class AllTypesGeneration(BaseFilter):
         states.analyzing_compatibility_relationship
     )
     astrological_forecast_health: TypeGeneration = TypeGeneration(
-        "❤️‍🩹 Астрологический прогноз для здоровья",
+        "Прогноз для здоровья",
         states.astrological_forecast_health
     )
     analyzing_personal_strengths: TypeGeneration = TypeGeneration(
@@ -44,13 +44,13 @@ class AllTypesGeneration(BaseFilter):
     def __init__(self):
         self.types = {
             "🪐 Анализ натальной карты": self.natal_chart_analysis.state,
-            "☀️ Прогнозы": self.predictions.state,
+            "🌟 Прогнозы и гороскопы": self.predictions.state,
             "💼 Бизнес-гороскоп": self.horoscope_for_business.state,
             "🚀 Рекомендации по самореализации":
                 self.recommendations_self_actualization.state,
             "💞 Анализ совместимости в отношениях":
                 self.analyzing_compatibility_relationship.state,
-            "❤️‍🩹 Астрологический прогноз для здоровья":
+            "Прогноз для здоровья":
                 self.astrological_forecast_health.state,
             "✨ Анализ сильных сторон личности":
                 self.analyzing_personal_strengths.state,
@@ -59,17 +59,32 @@ class AllTypesGeneration(BaseFilter):
     def __getitem__(self, item):
         return self.types[item]
 
-    async def __call__(self, message: Message) -> bool:
-        text = message.text
+    async def __call__(self, message: Message or CallbackQuery) -> bool:
+        if isinstance(message, Message):
+            text = message.text
 
-        if (
-                text == self.natal_chart_analysis.text or
-                text == self.predictions.text or
-                text == self.horoscope_for_business.text or
-                text == self.recommendations_self_actualization.text or
-                text == self.analyzing_compatibility_relationship.text or
-                text == self.astrological_forecast_health.text or
-                text == self.analyzing_personal_strengths.text
-        ):
-            return True
-        return False
+            if (
+                    text == self.natal_chart_analysis.text or
+                    text == self.predictions.text or
+                    text == self.horoscope_for_business.text or
+                    text == self.recommendations_self_actualization.text or
+                    text == self.analyzing_compatibility_relationship.text or
+                    text == self.astrological_forecast_health.text or
+                    text == self.analyzing_personal_strengths.text
+            ):
+                return True
+            return False
+        else:
+            text = message.data
+
+            if (
+                    text == self.natal_chart_analysis.text or
+                    text == self.predictions.text or
+                    text == self.horoscope_for_business.text or
+                    text == self.recommendations_self_actualization.text or
+                    text == self.analyzing_compatibility_relationship.text or
+                    text == self.astrological_forecast_health.text or
+                    text == self.analyzing_personal_strengths.text
+            ):
+                return True
+            return False

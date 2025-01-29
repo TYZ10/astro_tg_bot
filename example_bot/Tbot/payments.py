@@ -110,11 +110,6 @@ class PaymentsBot(BasicBotOperation):
             pay_id, url = self.__create_payments()
 
             if pay_id is None:
-                await message.answer(
-                    text="Произошла ошибка при создании оплаты, попробуйте "
-                         "позже",
-                    reply_markup=self.keyboard.main_menu_kb,
-                )
                 return
 
             self.operation_db.update_user_info_db(

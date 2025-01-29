@@ -13,46 +13,46 @@ class AllTypesGeneration(BaseFilter):
     from example_bot.Tbot import states
 
     natal_chart_analysis: TypeGeneration = TypeGeneration(
-        "Анализ натальной карты",
+        "🪐 Анализ натальной карты",
         states.natal_chart_analysis
     )
     predictions: TypeGeneration = TypeGeneration(
-        "Прогнозы",
+        "☀️ Прогнозы",
         states.predictions
     )
     horoscope_for_business: TypeGeneration = TypeGeneration(
-        "Гороскоп для бизнеса",
+        "💼 Бизнес-гороскоп",
         states.horoscope_for_business
     )
     recommendations_self_actualization: TypeGeneration = TypeGeneration(
-        "Рекомендации по самореализации",
+        "🚀 Рекомендации по самореализации",
         states.recommendations_self_actualization
     )
     analyzing_compatibility_relationship: TypeGeneration = TypeGeneration(
-        "Анализ совместимости в отношениях",
+        "💞 Анализ совместимости в отношениях",
         states.analyzing_compatibility_relationship
     )
     astrological_forecast_health: TypeGeneration = TypeGeneration(
-        "Астрологический прогноз для здоровья",
+        "❤️‍🩹 Астрологический прогноз для здоровья",
         states.astrological_forecast_health
     )
     analyzing_personal_strengths: TypeGeneration = TypeGeneration(
-        "Анализ сильных сторон личности",
+        "✨ Анализ сильных сторон личности",
         states.analyzing_personal_strengths
     )
 
     def __init__(self):
         self.types = {
-            "Анализ натальной карты": self.natal_chart_analysis.state,
-            "Прогнозы": self.predictions.state,
-            "Гороскоп для бизнеса": self.horoscope_for_business.state,
-            "Рекомендации по самореализации":
+            "🪐 Анализ натальной карты": self.natal_chart_analysis.state,
+            "☀️ Прогнозы": self.predictions.state,
+            "💼 Бизнес-гороскоп": self.horoscope_for_business.state,
+            "🚀 Рекомендации по самореализации":
                 self.recommendations_self_actualization.state,
-            "Анализ совместимости в отношениях":
+            "💞 Анализ совместимости в отношениях":
                 self.analyzing_compatibility_relationship.state,
-            "Астрологический прогноз для здоровья":
+            "❤️‍🩹 Астрологический прогноз для здоровья":
                 self.astrological_forecast_health.state,
-            "Анализ сильных сторон личности":
+            "✨ Анализ сильных сторон личности":
                 self.analyzing_personal_strengths.state,
         }
 

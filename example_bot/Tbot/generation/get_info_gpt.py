@@ -5,7 +5,10 @@ from example_bot.Tbot import ConfigBot
 async def main_get_info_gpt(config: ConfigBot, all_info, promt: str):
     promt = promt + f"\n{all_info}"
 
-    return await generate_gpt_txt(
+    text = await generate_gpt_txt(
         config.client_gpt,
         promt
     )
+    text = text.replace('#', '')
+
+    return text

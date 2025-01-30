@@ -2,7 +2,6 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters.state import StatesGroup, State
 
-from yookassa import Configuration
 from openai import AsyncOpenAI
 from environs import Env
 from opencage.geocoder import OpenCageGeocode
@@ -41,17 +40,8 @@ class ConfigBot:
         self.client_gpt: AsyncOpenAI = AsyncOpenAI(
             api_key=TOKEN_CHAT_GPT
         )
-        try:
-            store_id = env.int("STORE_ID")
-            the_secret_key = env.str("THE_SECRET_KEY")
-        except:
-            store_id = None
-            the_secret_key = None
-        if the_secret_key and store_id:
-            Configuration.account_id = store_id
-            Configuration.secret_key = the_secret_key
-        else:
-            Configuration.configure_auth_token(env.str("OAUTH_TOKEN"))
+        self.store_id = env.int("STORE_ID")
+        self.the_secret_key = env.str("THE_SECRET_KEY")
 
     async def skip_updates(self):
         try:

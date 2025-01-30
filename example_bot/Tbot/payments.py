@@ -1,8 +1,7 @@
 import logging
 
 from aiogram import types, F
-from aiogram.fsm.context import FSMContext
-from yookassa import Payment
+from yookassa import Payment, Configuration
 
 from . import BasicBotOperation
 from example_bot.misc.datetime_function import create_new_payments_end
@@ -61,6 +60,9 @@ class PaymentsBot(BasicBotOperation):
         #  https://yookassa.ru/developers/api#payment_object
         #  https://yookassa.ru/developers/api#create_payment
         try:
+            Configuration.configure(self.config.store_id,
+                                    self.config.the_secret_key)
+
             payment = Payment.create({
                 "amount": {
                     "value": "150.00",
@@ -75,7 +77,8 @@ class PaymentsBot(BasicBotOperation):
 
             url = payment.confirmation.confirmation_url
             return payment.id, url
-        except:
+        except Exception as e:
+            logging.exception(e, exc_info=True)
             return None, None
 
     @staticmethod
@@ -121,6 +124,7 @@ class PaymentsBot(BasicBotOperation):
             col_info.referrals_count,
             call.from_user.id,
         )
+
         if choice == "point":
             if referrals_count >= 2:
                 await call.message.answer(

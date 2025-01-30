@@ -138,6 +138,13 @@ class KeyboardBot:
                 "Главное меню.": "main menu",
             }
         )
+        self.payments_choice_ikb = self.__inline_kb(
+            {
+                "Оплатить рублями": "choice payments_rub",
+                "Оплатить реферальными баллами": "choice payments_point",
+                "Назад": "main menu",
+            }
+        )
 
     def create_payments_ikb(self, url, id):
         kb_payment = InlineKeyboardBuilder()

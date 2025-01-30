@@ -58,8 +58,10 @@ class KeyboardBot:
 
         self.predictions_and_horoscopes_ikb = self.__inline_kb(
             {
-                "🗓 Прогноз на 2025 год": "select prediction_year",
+                "🗓 Прогноз на текущий год": "select prediction_year",
+                "🗓 Прогноз на следующий год": "select prediction_year",
                 "📆 Прогноз на следующий месяц": "select prediction_month",
+                "📆 Прогноз на текущий месяц": "select prediction_month",
                 "💼 Бизнес-гороскоп": "💼 Бизнес-гороскоп",
                 "❤️‍🩹 Астрологический прогноз для здоровья":
                     "Прогноз для здоровья",
@@ -153,6 +155,7 @@ class KeyboardBot:
                           callback_data=f"check payment_{id}")
         kb_payment.button(text="Отменить оплату",
                           callback_data="main menu")
+        kb_payment.adjust(1)
         return kb_payment.as_markup()
 
     def __inline_kb(

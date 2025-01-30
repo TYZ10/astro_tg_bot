@@ -233,3 +233,7 @@ class PaymentsBot(BasicBotOperation):
             self.ref_payments,
             F.data == "ref payments"
         )
+        self.router.callback_query.register(
+            self.choice_payments,
+            F.data.split("_")[0] == "choice payments"
+        )

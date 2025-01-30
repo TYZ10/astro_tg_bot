@@ -174,7 +174,7 @@ class Predictions(BasicBotOperation):
                               f"{one_aspect}")
             return
 
-        await call.message.answer("Ожидайте...")
+        await call.message.answer("Ожидайте, примерное время 25-35 секунд ")
 
         col_info = self.operation_db.COLUMNS_INFO
 

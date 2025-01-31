@@ -168,11 +168,31 @@ class Predictions(BasicBotOperation):
         period = st["period"]
 
         one_aspect = st['one_aspect']
+        two_aspects = st.get("two_aspect")
+        three_aspects = st.get("three_aspect")
 
-        if one_aspect == call.data:
-            await call.answer(f"Вам нужно выбрать второй аспект отличный от "
-                              f"{one_aspect}")
+        if (one_aspect == call.data or two_aspects == call.data or
+                three_aspects == call.data):
+            await call.answer(f"Вам нужно выбрать неодинаковые аспекты!!")
             return
+
+        if period == "day":
+            if two_aspects:
+                if three_aspects:
+                    all_aspects = (f"{one_aspect}, {two_aspects}, ",
+                                   f"{three_aspects}, {call.data}")
+                else:
+                    await state.update_data(
+                        three_aspect=call.data
+                    )
+                    await call.answer("Выберите ещё один аспект")
+                    return
+            else:
+                await state.update_data(
+                    two_aspect=call.data
+                )
+                await call.answer("Выберите ещё один аспект")
+                return
 
         await call.message.answer("Ожидайте, примерное время 25-35 секунд ")
 
@@ -196,7 +216,7 @@ class Predictions(BasicBotOperation):
         )
 
         if period == "day":
-            text = self.text.format("на день", f"{one_aspect} {call.data}")
+            text = self.text.format("на день", all_aspects)
         elif period == "month":
             text = self.text.format("на месяц", f"{one_aspect} {call.data}")
         else:

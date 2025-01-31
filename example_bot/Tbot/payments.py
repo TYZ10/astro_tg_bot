@@ -54,7 +54,7 @@ class PaymentsBot(BasicBotOperation):
                     message_or_call.from_user.id
                 )
 
-    def __create_payments(self):
+    def __create_payments(self, full_name: str):
         """Создание оплаты"""
 
         #  https://yookassa.ru/developers/api#payment_object
@@ -63,6 +63,17 @@ class PaymentsBot(BasicBotOperation):
             Configuration.configure(self.config.store_id,
                                     self.config.the_secret_key)
 
+            # payment = Payment.create({
+            #     "amount": {
+            #         "value": "150.00",
+            #         "currency": "RUB"
+            #     },
+            #     "confirmation": {
+            #         "type": "redirect",
+            #         "return_url": self.config.URL_BOT
+            #     },
+            #     "capture": True,
+            #     "description": "Оплата подписки"})
             payment = Payment.create({
                 "amount": {
                     "value": "150.00",
@@ -73,7 +84,33 @@ class PaymentsBot(BasicBotOperation):
                     "return_url": self.config.URL_BOT
                 },
                 "capture": True,
-                "description": "Оплата подписки"})
+                "description": "Оплата подписки",
+                "receipt": {
+                    "customer": {
+                        "full_name": f"{full_name}",
+                        "email": "test@gmail.com",
+                        "phone": "+79309437105"
+                    },
+                    "items": [
+                        {
+                            "description": "Подписка в боте",
+                            "quantity": "150.00",
+                            "amount": {
+                                "value": 1,
+                                "currency": "RUB"
+                            },
+                            "vat_code": "2",
+                            "payment_mode": "full_payment",
+                            "payment_subject": "service",
+                            "supplier": {
+                                "name": "string",
+                                "phone": "string"
+                            }
+                        },
+                    ]
+                }
+            }
+            )
 
             url = payment.confirmation.confirmation_url
             return payment.id, url
@@ -133,7 +170,7 @@ class PaymentsBot(BasicBotOperation):
                     reply_markup=self.keyboard.ref_payments_ikb,
                 )
             else:
-                pay_id, url = self.__create_payments()
+                pay_id, url = self.__create_payments(call.from_user.full_name)
 
                 if pay_id is None:
                     return
@@ -155,7 +192,7 @@ class PaymentsBot(BasicBotOperation):
                     ),
                 )
         else:
-            pay_id, url = self.__create_payments()
+            pay_id, url = self.__create_payments(call.from_user.full_name)
 
             if pay_id is None:
                 return

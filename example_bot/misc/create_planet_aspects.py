@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import ephem
 import math
 import swisseph as swe
@@ -8,6 +10,7 @@ def create_aspects(date: str,
                    longitude: float) -> dict:
     # Данные
     date = str(date)  # Дата и время рождения
+    date, time = date.split()
     latitude = latitude  # Широта
     longitude = longitude  # Долгота
 
@@ -17,6 +20,14 @@ def create_aspects(date: str,
     observer.lat = str(latitude)
     observer.lon = str(longitude)
 
+    year, month, day = map(int, date.split("-"))
+    hour, minute = map(int, time.split(":"))
+    local_time = datetime(year, month, day, hour, minute)
+    utc_time = local_time - timedelta(hours=3)
+    jd_utc = \
+    swe.utc_to_jd(utc_time.year, utc_time.month, utc_time.day, utc_time.hour,
+                  utc_time.minute, 0, swe.GREG_CAL)[0]
+
     # Функция преобразования абсолютных градусов в знак и градус
     def convert_to_sign(degrees):
         signs = [
@@ -25,36 +36,36 @@ def create_aspects(date: str,
             "Водолей", "Рыбы"
         ]
         sign_index = int(degrees // 30)  # Определяем знак
-        sign_degree = degrees % 30      # Определяем градус в знаке
+        sign_degree = degrees % 30  # Определяем градус в знаке
         return f"{signs[sign_index]} {sign_degree:.2f}°"
 
     # Позиции планет
     planets = {
-        "Солнце": ephem.Sun(observer),
-        "Луна": ephem.Moon(observer),
-        "Меркурий": ephem.Mercury(observer),
-        "Венера": ephem.Venus(observer),
-        "Марс": ephem.Mars(observer),
-        "Юпитер": ephem.Jupiter(observer),
-        "Сатурн": ephem.Saturn(observer),
-        "Уран": ephem.Uranus(observer),
-        "Нептун": ephem.Neptune(observer),
-        "Плутон": ephem.Pluto(observer),
+        "Солнце": swe.SUN,
+        "Луна": swe.MOON,
+        "Меркурий": swe.MERCURY,
+        "Венера": swe.VENUS,
+        "Марс": swe.MARS,
+        "Юпитер": swe.JUPITER,
+        "Сатурн": swe.SATURN,
+        "Уран": swe.URANUS,
+        "Нептун": swe.NEPTUNE,
+        "Плутон": swe.PLUTO,
     }
 
     planet_positions = {}
-    for planet_name, planet in planets.items():
-        planet.compute(observer)
-        ecliptic_longitude = math.degrees(
-            planet.ra
-        ) % 360  # Эклиптическая долгота
+    planet_degrees = {}
+    for planet_name, planet_id in planets.items():
+        position, _ = swe.calc_ut(jd_utc, planet_id)
+        ecliptic_longitude = position[0] % 360
         zodiac = convert_to_sign(ecliptic_longitude)
         planet_positions[planet_name] = zodiac
+        planet_degrees[planet_name] = ecliptic_longitude
 
     # Вычисление аспектов
     def calculate_aspects(planets):
         aspects = []
-        aspect_types = {
+        aspect_orb = {
             0: "Соединение",
             60: "Секстиль",
             90: "Квадрат",
@@ -64,10 +75,11 @@ def create_aspects(date: str,
         planet_list = list(planets.items())
         for i, (p1_name, p1_pos) in enumerate(planet_list):
             for p2_name, p2_pos in planet_list[i + 1:]:
-                diff = abs(p1_pos - p2_pos) % 360
-                diff = min(diff, 360 - diff)  # Угол между планетами
-                for aspect_angle, aspect_name in aspect_types.items():
-                    if abs(diff - aspect_angle) < 5:  # Орбис 5 градусов
+                diff = abs(p1_pos - p2_pos)
+                if diff > 180:
+                    diff = 360 - diff  # Нормализация аспекта
+                for aspect_angle, aspect_name in aspect_orb.items():
+                    if abs(diff - aspect_angle) <= 5:  # Орбис 5 градусов
                         aspects.append({
                             "планета_1": p1_name,
                             "планета_2": p2_name,
@@ -76,21 +88,13 @@ def create_aspects(date: str,
                         })
         return aspects
 
-    # Конвертация положений планет в градусы
-    planet_degrees = {name: math.degrees(planet.ra) % 360 for name, planet in planets.items()}
     aspects = calculate_aspects(planet_degrees)
+    jd = swe.julday(year, month, day, hour + minute / 60.0)
+    houses, ascmc = swe.houses_ex(jd, latitude, longitude, b'P')
+    ascendant = convert_to_sign(ascmc[swe.ASC])
+    houses_positions = {f"{i + 1}": convert_to_sign(houses[i]) for i in
+                        range(12)}
 
-    # Расчёт домов (система Плацидус) с использованием swisseph
-    year, month, day = map(int, date.split(" ")[0].split("-"))
-    hour, minute, second = map(int, date.split(" ")[1].split(":"))
-    jd = swe.julday(year, month, day, hour + minute / 60 + second / 3600)
-
-    houses, ascmc = swe.houses(jd, latitude, longitude, b'P')  # 'P' — Плацидус
-    ascendant_deg = ascmc[0]
-    ascendant = convert_to_sign(ascendant_deg)
-    houses_positions = {f"{i + 1}": convert_to_sign(houses[i]) for i in range(12)}
-
-    # Вывод данных
     result = {
         "асцендент": ascendant,
         "дома": houses_positions,
@@ -98,9 +102,11 @@ def create_aspects(date: str,
         "аспекты": aspects
     }
 
-    # import json
-    # print(json.dumps(result, ensure_ascii=False, indent=4))
+    import json
+    print(json.dumps(result, ensure_ascii=False, indent=4))
     return result
+
+create_aspects("1987-08-31 11:00", 59.9606739, 30.1586551)
 
 
 """

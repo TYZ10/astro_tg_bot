@@ -24,6 +24,13 @@ class SetPredictions(BasicBotOperation):
             main_time_prediction: datetime,
     ):
         if main_time_prediction.hour != datetime.now().hour:
+            self.apscheduler.scheduler.add_job(
+                self.start_prediction,
+                'date',
+                hour=main_time_prediction.hour,
+                minute=main_time_prediction.minute,
+                args=[message, state, main_time_prediction]
+            )
             return
 
         payments_end = self.operation_db.select_user_info_db(
@@ -33,7 +40,7 @@ class SetPredictions(BasicBotOperation):
 
         if get_day_and_hours_from_date(payments_end, get_hour=True) == 0:
             return
-        
+
         text = """☀️ Хочешь начинать каждый день с подсказок от звёзд? Ежедневный гороскоп составляется специально для тебя и приходит вечером в удобное время, которое ты выбираешь. Ты можешь выбрать до 4 сфер, которые для тебя наиболее важны:
 💼 Финансы и карьера
 👨‍👩‍👧‍👦 Семья и дети
@@ -57,6 +64,13 @@ class SetPredictions(BasicBotOperation):
         await message.answer(
             text=text,
             reply_markup=self.keyboard.get_aspect_selection_ikb
+        )
+        self.apscheduler.scheduler.add_job(
+            self.start_prediction,
+            'date',
+            hour=main_time_prediction.hour,
+            minute=main_time_prediction.minute,
+            args=[message, state, main_time_prediction]
         )
 
     async def set_prediction(
@@ -83,7 +97,7 @@ class SetPredictions(BasicBotOperation):
 
         self.apscheduler.scheduler.add_job(
             self.start_prediction,
-            'cron',
+            'date',
             hour=set_time.hour,
             minute=set_time.minute,
             args=[message, state, time_prediction]

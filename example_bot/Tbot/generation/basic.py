@@ -17,7 +17,7 @@ class AllTypesGeneration(BaseFilter):
         states.natal_chart_analysis
     )
     predictions: TypeGeneration = TypeGeneration(
-        "🌟 Прогнозы и гороскопы",
+        "select prediction",
         states.predictions
     )
     horoscope_for_business: TypeGeneration = TypeGeneration(
@@ -44,7 +44,7 @@ class AllTypesGeneration(BaseFilter):
     def __init__(self):
         self.types = {
             "🪐 Анализ натальной карты": self.natal_chart_analysis.state,
-            "🌟 Прогнозы и гороскопы": self.predictions.state,
+            "select prediction": self.predictions.state,
             "💼 Бизнес-гороскоп": self.horoscope_for_business.state,
             "🚀 Рекомендации по самореализации":
                 self.recommendations_self_actualization.state,
@@ -57,7 +57,7 @@ class AllTypesGeneration(BaseFilter):
         }
 
     def __getitem__(self, item):
-        return self.types[item]
+        return self.types[item.split("_")[0]]
 
     async def __call__(self, message: Message or CallbackQuery) -> bool:
         if isinstance(message, Message):
@@ -65,7 +65,6 @@ class AllTypesGeneration(BaseFilter):
 
             if (
                     text == self.natal_chart_analysis.text or
-                    text == self.predictions.text or
                     text == self.horoscope_for_business.text or
                     text == self.recommendations_self_actualization.text or
                     text == self.analyzing_compatibility_relationship.text or
@@ -79,7 +78,7 @@ class AllTypesGeneration(BaseFilter):
 
             if (
                     text == self.natal_chart_analysis.text or
-                    text == self.predictions.text or
+                    text.split("_")[0] == self.predictions.text or
                     text == self.horoscope_for_business.text or
                     text == self.recommendations_self_actualization.text or
                     text == self.analyzing_compatibility_relationship.text or

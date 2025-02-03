@@ -27,6 +27,8 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
     ):
         """Анализ совместимости в отношениях"""
 
+        await message.answer("Ожидайте, примерное время 25-35 секунд")
+
         (place_birth_user, latitude_user, longitude_user, time_birth_user,
          data_birth_user) = info_user
         (place_birth_partner, latitude_partner, longitude_partner,

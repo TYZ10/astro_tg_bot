@@ -104,22 +104,22 @@ class MyDataBot(BasicBotOperation):
             return
 
         await message.answer(
-            text="Введите время рождения в формате HH MM SS.\n\n",
+            text="Введите время рождения в формате HH MM.\n\n",
             reply_markup=self.keyboard.abolition_ikb
         )
         await state.set_state(states.time_birth)
         await state.update_data(data_birth=data_birth)
 
     async def get_time_birth(self, message: types.Message, state: FSMContext):
-        time_birth = message.text
+        time_birth = message.text + " 00"
         try:
             time_birth = datetime.strptime(time_birth, '%H %M %S').time()
         except:
             await message.answer(
                 text=("Введён неверный формат времени."
                      "Введите время рождения в "
-                     "формате HH MM SS (Часы минуты секунды) числами!\n\n"
-                     "Пример: 12 30 02"),
+                     "формате HH MM (Часы минуты) числами!\n\n"
+                     "Пример: 12 30"),
                 reply_markup=self.keyboard.abolition_ikb)
             return
         await message.answer(

@@ -226,6 +226,7 @@ class PaymentsBot(BasicBotOperation):
                 col_info.payments_id: None,
                 col_info.payments_end: create_new_payments_end(payments_end),
                 col_info.referrals_count: referrals_count - 2,
+                col_info.generation_count: 10
             },
             call.from_user.id
         )
@@ -249,7 +250,8 @@ class PaymentsBot(BasicBotOperation):
             self.operation_db.update_user_info_db(
                 {
                     col_info.payments_id: None,
-                    col_info.payments_end: new_pay_end_date
+                    col_info.payments_end: new_pay_end_date,
+                    col_info.generation_count: 10
                 },
                 call.from_user.id
             )

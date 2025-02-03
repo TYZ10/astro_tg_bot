@@ -83,7 +83,7 @@ class StartAllGeneration(BasicBotOperation):
                 {
                     col_info.generation_count: 4
                 },
-                userid=userid,
+                userid,
             )
             text = ("Я узнал вас администратор, обновляю ваши генерации. Можете продолжать.")
             keyboard = self.keyboard.start_generation_ikb

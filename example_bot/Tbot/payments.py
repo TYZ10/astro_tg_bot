@@ -3,6 +3,7 @@ import logging
 from aiogram import types, F
 from aiogram.fsm.context import FSMContext
 from yookassa import Payment, Configuration
+from example_bot.misc.datetime_function import get_day_and_hours_from_date
 
 from . import BasicBotOperation, states
 from example_bot.misc.datetime_function import create_new_payments_end
@@ -124,12 +125,25 @@ class PaymentsBot(BasicBotOperation):
             call: types.CallbackQuery,
             state: FSMContext
     ):
-        await call.message.answer(
-            text="Введите время отправки прогноза на следующий день,\n"
-                 "Обращаю внимание что время нужно указать по МСК в формате:"
-                 "HH MM (часы, минуты)"
+        col_info = self.operation_db.COLUMNS_INFO
+
+        payments_end = self.operation_db.select_user_info_db(
+            f"{col_info.referrals_count}, {col_info.payments_end}",
+            call.message.from_user.id,
+            many=True
         )
-        await state.set_state(states.set_time_prediction)
+        if get_day_and_hours_from_date(payments_end) != 0:
+            await call.message.answer(
+                text="Введите время отправки прогноза на следующий день,\n"
+                     "Обращаю внимание что время нужно указать по МСК в формате:"
+                     "HH MM (часы, минуты)"
+            )
+            await state.set_state(states.set_time_prediction)
+        else:
+            await call.message.answer(
+                text="У вас нет подписки для настройки авто предсказания.",
+                reply_markup=self.keyboard.main_menu_kb
+            )
 
     @staticmethod
     def check_user_payments(payment_id) -> bool:

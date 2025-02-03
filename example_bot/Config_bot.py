@@ -68,3 +68,5 @@ class states(StatesGroup):
     analyzing_compatibility_relationship = State()
     astrological_forecast_health = State()
     analyzing_personal_strengths = State()
+
+    set_time_prediction = State()

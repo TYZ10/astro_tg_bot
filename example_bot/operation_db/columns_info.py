@@ -23,5 +23,7 @@ class ColumnsInfoDB:
         self.referral_all_count_points_user = "referral_all_count_points_user"
         self.payments_id = "payments_id"
 
+        self.time_prediction = "time_prediction"
+
 
 COLUMNS_INFO = ColumnsInfoDB()

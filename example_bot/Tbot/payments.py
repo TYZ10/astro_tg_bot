@@ -1,9 +1,10 @@
 import logging
 
 from aiogram import types, F
+from aiogram.fsm.context import FSMContext
 from yookassa import Payment, Configuration
 
-from . import BasicBotOperation
+from . import BasicBotOperation, states
 from example_bot.misc.datetime_function import create_new_payments_end
 
 
@@ -118,6 +119,18 @@ class PaymentsBot(BasicBotOperation):
             logging.exception(e, exc_info=True)
             return None, None
 
+    async def __set_time_prediction(
+            self,
+            call: types.CallbackQuery,
+            state: FSMContext
+    ):
+        await call.message.answer(
+            text="Введите время отправки прогноза на следующий день,\n"
+                 "Обращаю внимание что время нужно указать по МСК в формате:"
+                 "HH MM (часы, минуты)"
+        )
+        await state.set_state(states.set_time_prediction)
+
     @staticmethod
     def check_user_payments(payment_id) -> bool:
         try:
@@ -212,7 +225,7 @@ class PaymentsBot(BasicBotOperation):
                 ),
             )
 
-    async def ref_payments(self, call: types.CallbackQuery):
+    async def ref_payments(self, call: types.CallbackQuery, state: FSMContext):
         col_info = self.operation_db.COLUMNS_INFO
 
         referrals_count, payments_end = self.operation_db.select_user_info_db(
@@ -236,7 +249,9 @@ class PaymentsBot(BasicBotOperation):
             reply_markup=self.keyboard.main_menu_kb,
         )
 
-    async def check_payments(self, call: types.CallbackQuery):
+        await self.__set_time_prediction(call, state)
+
+    async def check_payments(self, call: types.CallbackQuery, state: FSMContext):
         _, id = call.data.split("_", maxsplit=1)
 
         if self.check_user_payments(id):
@@ -260,6 +275,8 @@ class PaymentsBot(BasicBotOperation):
                 text="Вы успешно оплатили подписку",
                 reply_markup=self.keyboard.main_menu_kb,
             )
+
+            await self.__set_time_prediction(call, state)
         else:
             await call.answer(
                 text="Вы не оплатили подписку!"

@@ -13,6 +13,7 @@ from .generation.natal_chart_analysis import NatalChartAnalysis
 from .generation.predictions import Predictions
 from .generation.recommendations_actualization import (
     RecommendationsActualization)
+from .generation.set_time_prediction import SetPredictions
 from .generation.start_generation import StartAllGeneration
 from . import (
     OperationDataBaseBot, ConfigBot
@@ -62,6 +63,9 @@ class InitHandlerBot:
             config, operation_db, keyboard
         )
         self.apscheduler = ApshedulerBot(config, operation_db, keyboard)
+        self.set_time_prediction = SetPredictions(
+            config, operation_db, keyboard, self.apscheduler
+        )
 
         self.__register_all_handlers()
 
@@ -83,4 +87,5 @@ class InitHandlerBot:
             self.predictions.router,
             self.recommendations_actualization.router,
             self.start_all_generation.router,
+            self.set_time_prediction.router
         )

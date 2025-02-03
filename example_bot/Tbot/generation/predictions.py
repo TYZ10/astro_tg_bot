@@ -194,8 +194,6 @@ class Predictions(BasicBotOperation):
                 await call.answer("Выберите ещё один аспект")
                 return
 
-        await call.message.answer("Ожидайте, примерное время 25-35 секунд ")
-
         col_info = self.operation_db.COLUMNS_INFO
 
         (place_birth, latitude, longitude, time_birth,
@@ -208,6 +206,15 @@ class Predictions(BasicBotOperation):
             call.from_user.id,
             many=True
         )
+
+        if place_birth is None or time_birth is None or data_birth is None:
+            text = "Перед началом генерации нужно ввести ваши данные."
+            keyboard = self.keyboard.no_generation_data_ikb
+            await call.message.edit_text(text=text, reply_markup=keyboard)
+            await state.clear()
+            return
+
+        await call.message.answer("Ожидайте, примерное время 25-35 секунд ")
 
         aspects = create_aspects(
             f"{data_birth} {time_birth}",
@@ -243,9 +250,13 @@ class Predictions(BasicBotOperation):
             call.from_user.id
         )
 
-        await call.message.answer(
-            text=str(text_gpt)
-        )
+        if len(str(text_gpt)) > 4096:
+            await call.message.answer(str(text_gpt)[:4096])
+            await call.message.answer(str(text_gpt)[4096:])
+        else:
+            await call.message.answer(
+                text=str(text_gpt)
+            )
 
         await call.message.answer(
             text=f"Количество оставшихся генераций: {count_generation - 1}",

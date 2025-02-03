@@ -21,7 +21,7 @@ def create_aspects(date: str,
     observer.lon = str(longitude)
 
     year, month, day = map(int, date.split("-"))
-    hour, minute = map(int, time.split(":"))
+    hour, minute, seconds = map(int, time.split(":"))
     local_time = datetime(year, month, day, hour, minute)
     utc_time = local_time - timedelta(hours=3)
     jd_utc = \
@@ -102,11 +102,10 @@ def create_aspects(date: str,
         "аспекты": aspects
     }
 
-    import json
-    print(json.dumps(result, ensure_ascii=False, indent=4))
+    #import json
+    #print(json.dumps(result, ensure_ascii=False, indent=4))
     return result
 
-create_aspects("1987-08-31 11:00", 59.9606739, 30.1586551)
 
 
 """

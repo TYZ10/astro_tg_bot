@@ -297,3 +297,7 @@ class PaymentsBot(BasicBotOperation):
             self.choice_payments,
             F.data.split("_")[0] == "choice payments"
         )
+        self.router.callback_query.register(
+            self.__set_time_prediction,
+            F.data == "set time prediction"
+        )

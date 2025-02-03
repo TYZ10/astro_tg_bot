@@ -80,6 +80,7 @@ class KeyboardBot:
         self.my_data_ikb = self.__inline_kb(
             {
                 "Изменить свои данные": "modify my data",
+                "Изменить время авто предсказания": "set time prediction",
                 "Главное меню": "main menu"
             }
         )

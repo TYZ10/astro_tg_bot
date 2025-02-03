@@ -110,9 +110,13 @@ class NatalChartAnalysis(BasicBotOperation):
             call.from_user.id
         )
 
-        await call.message.answer(
-            text=str(text_gpt)
-        )
+        if len(str(text_gpt)) > 4096:
+            await call.message.answer(str(text_gpt)[:4096])
+            await call.message.answer(str(text_gpt)[4096:])
+        else:
+            await call.message.answer(
+                text=str(text_gpt)
+            )
 
         await call.message.answer(
             text=f"Количество оставшихся генераций: {count_generation - 1}",

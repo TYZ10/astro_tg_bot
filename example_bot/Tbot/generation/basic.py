@@ -4,8 +4,8 @@ from aiogram.types import Message, CallbackQuery
 
 
 class TypeGeneration:
-    def __init__(self, text: str, state: State):
-        self.text: str = text
+    def __init__(self, text: str or list, state: State):
+        self.text: str or list = text
         self.state: State = state
 
 
@@ -17,7 +17,7 @@ class AllTypesGeneration(BaseFilter):
         states.natal_chart_analysis
     )
     predictions: TypeGeneration = TypeGeneration(
-        "select prediction",
+        ["select prediction", "🌟 Прогнозы и гороскопы"],
         states.predictions
     )
     horoscope_for_business: TypeGeneration = TypeGeneration(
@@ -45,6 +45,7 @@ class AllTypesGeneration(BaseFilter):
         self.types = {
             "🪐 Анализ натальной карты": self.natal_chart_analysis.state,
             "select prediction": self.predictions.state,
+            "🌟 Прогнозы и гороскопы": self.predictions.state,
             "💼 Бизнес-гороскоп": self.horoscope_for_business.state,
             "🚀 Рекомендации по самореализации":
                 self.recommendations_self_actualization.state,
@@ -69,7 +70,8 @@ class AllTypesGeneration(BaseFilter):
                     text == self.recommendations_self_actualization.text or
                     text == self.analyzing_compatibility_relationship.text or
                     text == self.astrological_forecast_health.text or
-                    text == self.analyzing_personal_strengths.text
+                    text == self.analyzing_personal_strengths.text or
+                    text == self.predictions.text[1]
             ):
                 return True
             return False
@@ -78,7 +80,7 @@ class AllTypesGeneration(BaseFilter):
 
             if (
                     text == self.natal_chart_analysis.text or
-                    text.split("_")[0] == self.predictions.text or
+                    text.split("_")[0] == self.predictions.text[0] or
                     text == self.horoscope_for_business.text or
                     text == self.recommendations_self_actualization.text or
                     text == self.analyzing_compatibility_relationship.text or

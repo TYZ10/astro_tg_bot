@@ -66,9 +66,13 @@ class AnalyzingCompatibilityRelationship(BasicBotOperation):
             message.from_user.id
         )
 
-        await message.answer(
-            text=str(text_gpt)
-        )
+        if len(str(text_gpt)) > 4096:
+            await message.answer(str(text_gpt)[:4096])
+            await message.answer(str(text_gpt)[4096:])
+        else:
+            await message.answer(
+                text=str(text_gpt)
+            )
 
         await message.answer(
             text=f"Количество оставшихся генераций: {count_generation - 1}",

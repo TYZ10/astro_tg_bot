@@ -128,9 +128,8 @@ class PaymentsBot(BasicBotOperation):
         col_info = self.operation_db.COLUMNS_INFO
 
         payments_end = self.operation_db.select_user_info_db(
-            f"{col_info.referrals_count}, {col_info.payments_end}",
-            call.message.from_user.id,
-            many=True
+            col_info.payments_end,
+            call.from_user.id
         )
         if get_day_and_hours_from_date(payments_end) != 0:
             await call.message.answer(
@@ -244,7 +243,7 @@ class PaymentsBot(BasicBotOperation):
 
         referrals_count, payments_end = self.operation_db.select_user_info_db(
             f"{col_info.referrals_count}, {col_info.payments_end}",
-            call.message.from_user.id,
+            call.from_user.id,
             many=True
         )
 

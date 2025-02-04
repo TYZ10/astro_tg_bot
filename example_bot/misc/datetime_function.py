@@ -52,8 +52,7 @@ def create_new_payments_end(payments_end):
 
         new_pay_end_date = now + timedelta(days=days_to_add)
     else:
-        end_date = datetime.strptime(payments_end,
-                                     "%Y-%m-%d %H:%M:%S")
+        end_date = payments_end
 
         new_pay_end_date = (end_date +
                             timedelta(days=days_to_add))

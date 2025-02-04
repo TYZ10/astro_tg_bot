@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from aiogram import types
 from aiogram.fsm.context import FSMContext
@@ -21,14 +21,18 @@ class SetPredictions(BasicBotOperation):
             self,
             message: types.Message,
             state: FSMContext,
-            main_time_prediction: datetime,
+            main_time_prediction: datetime.time,
     ):
+
+        tomorrow = datetime.now() + timedelta(days=1)
+        tomorrow = datetime.combine(tomorrow, main_time_prediction)
+
         if main_time_prediction.hour != datetime.now().hour:
+
             self.apscheduler.scheduler.add_job(
                 self.start_prediction,
                 'date',
-                hour=main_time_prediction.hour,
-                minute=main_time_prediction.minute,
+                run_date=tomorrow,
                 args=[message, state, main_time_prediction]
             )
             return
@@ -68,8 +72,7 @@ class SetPredictions(BasicBotOperation):
         self.apscheduler.scheduler.add_job(
             self.start_prediction,
             'date',
-            hour=main_time_prediction.hour,
-            minute=main_time_prediction.minute,
+            run_date=tomorrow,
             args=[message, state, main_time_prediction]
         )
 
@@ -81,6 +84,8 @@ class SetPredictions(BasicBotOperation):
         set_time = message.text
         try:
             set_time = datetime.strptime(set_time, '%H %M').time()
+            tomorrow = datetime.now() + timedelta(days=1)
+            tomorrow = datetime.combine(tomorrow, set_time)
         except:
             await message.answer(
                 text=("Введён неверный формат времени."
@@ -98,8 +103,7 @@ class SetPredictions(BasicBotOperation):
         self.apscheduler.scheduler.add_job(
             self.start_prediction,
             'date',
-            hour=set_time.hour,
-            minute=set_time.minute,
+            run_date=tomorrow,
             args=[message, state, time_prediction]
         )
 

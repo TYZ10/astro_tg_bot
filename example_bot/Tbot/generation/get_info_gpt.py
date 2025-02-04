@@ -10,7 +10,7 @@ async def main_get_info_gpt(config: ConfigBot, all_info, promt: str):
         promt
     )
     try:
-        text = text.replace('#', '')
+        text = text.replace('#', '').replace('*', '')
     except:
         pass
 

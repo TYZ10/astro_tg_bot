@@ -22,6 +22,7 @@ class StartAllGeneration(BasicBotOperation):
         else:
             text_correct = message_or_call.data
             answer = message_or_call.message.answer
+            await state.update_data(period=text_correct.split("_")[-1])
 
         count_generation, referral_user, generation_count_all = \
             self.operation_db.select_user_info_db(

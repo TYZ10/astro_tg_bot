@@ -70,8 +70,7 @@ class AllTypesGeneration(BaseFilter):
                     text == self.recommendations_self_actualization.text or
                     text == self.analyzing_compatibility_relationship.text or
                     text == self.astrological_forecast_health.text or
-                    text == self.analyzing_personal_strengths.text or
-                    text == self.predictions.text[1]
+                    text == self.analyzing_personal_strengths.text
             ):
                 return True
             return False

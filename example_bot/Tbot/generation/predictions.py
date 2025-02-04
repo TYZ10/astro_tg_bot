@@ -61,18 +61,18 @@ class Predictions(BasicBotOperation):
 
     async def selection_predictions(
             self,
-            call: types.CallbackQuery
+            call: types.CallbackQuery,
+            state: FSMContext
     ):
-        await call.message.answer(
-            text="Выберите период предсказания:",
-            reply_markup=self.keyboard.selection_predictions_ikb
-        )
+        await self.get_predictions(call, state)
 
     async def get_predictions(
             self,
             call: types.CallbackQuery,
             state: FSMContext):
-        _, period = call.data.split("_", maxsplit=1)
+
+        st = await state.get_data()
+        period = st["period"]
 
         if period == "day":
             text = """☀️ Хочешь начинать каждый день с подсказок от звёзд? Ежедневный гороскоп составляется специально для тебя и приходит вечером в удобное время, которое ты выбираешь. Ты можешь выбрать до 4 сфер, которые для тебя наиболее важны:
@@ -137,8 +137,6 @@ class Predictions(BasicBotOperation):
 ✨ Миссия и предназначение
 Твой прогноз поможет планировать важные события и оставаться в гармонии с энергиями года. Жми кнопку и готовься к 2025 году! 🚀
 """
-
-        await state.update_data(period=period)
 
         await call.message.answer(
             text=text,

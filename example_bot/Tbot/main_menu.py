@@ -17,8 +17,8 @@ class MainMenuBot(BasicBotOperation):
     async def main_menu_call(self, call: types.CallbackQuery,
                              state: FSMContext):
         """Главное меню через инлайн кнопку"""
-        await state.clear()
         await call.message.delete()
+        await self.main_menu(call.message, state)
 
     def create_router(self):
         self.router.callback_query.register(self.main_menu_call,

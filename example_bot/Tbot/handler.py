@@ -84,8 +84,8 @@ class InitHandlerBot:
             self.astrological_forecast_health.router,
             self.horoscope_for_business.router,
             self.natal_chart_analysis.router,
-            self.predictions.router,
             self.recommendations_actualization.router,
             self.start_all_generation.router,
+            self.predictions.router,
             self.set_time_prediction.router
         )

@@ -1,6 +1,6 @@
 from datetime import date
 
-from example_bot.misc import generate_gpt_txt
+from example_bot.misc import generate_gpt_txt, create_aspects
 from example_bot.Tbot import ConfigBot
 
 

@@ -201,7 +201,7 @@ class Predictions(BasicBotOperation):
                     reply_markup=self.keyboard.payments_ikb
                 )
                 return
-        elif period == "month":
+        elif period.split(" ")[0] == "month":
              text = """📅 Гороскоп на месяц — это краткий и точный прогноз на 30 дней. Ты узнаешь, где тебя ждёт успех, а где стоит быть внимательнее. Звёзды подскажут лучшие моменты для действий. 🌙"
 
 Пояснение про выбор аспектов:
@@ -316,15 +316,21 @@ class Predictions(BasicBotOperation):
 
         if period == "day":
             text = self.text["day"].replace("{}", f"{all_aspects}")
-        elif period == "month":
+        elif period.split(" ")[0] == "month":
             text = self.text["month"].replace("{}", f"{one_aspect} {call.data}")
         else:
             text = self.text["year"].replace("{}", f"{one_aspect} {call.data}")
 
+        if period.split(" ")[-1] == "n":
+            next = True
+        else:
+            next = False
+
         text_gpt = await main_get_info_gpt(
             self.config,
             f"{aspects}",
-            text
+            text,
+            next=next
         )
         (count_generation,
          generation_count_all) = self.operation_db.select_user_info_db(

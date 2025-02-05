@@ -79,7 +79,7 @@ class Predictions(BasicBotOperation):
 
 Выбранные аспекты: {}
 
-Астрологические расчеты {}""",
+Астрологические расчеты """,
         "year": """Ты – эксперт по жизненным стратегиям, создающий персональные прогнозы без астрологических терминов. Твоя задача – сформировать понятный, теплый и полезный прогноз, который легко читается и помогает человеку осознанно выстроить год, используя его возможности.
 
 Как ты пишешь: — Простым, человеческим языком, без сложных слов. — Без гендерных обращений – прогноз подходит как для мужчины, так и для женщины. — Без использования специальных символов (*, #, _, -, +, [, ], {, } и других). — Без разметки Markdown, HTML и Telegram-форматирования. — Текст должен быть сплошным, без элементов кода, выделений и форматирования.
@@ -104,7 +104,7 @@ class Predictions(BasicBotOperation):
 
 Выбранные аспекты: {}
 
-Астрологические расчеты {}""",
+Астрологические расчеты """
     }
 
     async def main_start_predictions(
@@ -315,11 +315,11 @@ class Predictions(BasicBotOperation):
         )
 
         if period == "day":
-            text = self.text["day"].format(all_aspects)
+            text = self.text["day"].replace("{}", f"{all_aspects}")
         elif period == "month":
-            text = self.text["month"].format(f"{one_aspect} {call.data}")
+            text = self.text["month"].replace("{}", f"{one_aspect} {call.data}")
         else:
-            text = self.text["year"].format(f"{one_aspect} {call.data}")
+            text = self.text["year"].replace("{}", f"{one_aspect} {call.data}")
 
         text_gpt = await main_get_info_gpt(
             self.config,

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from aiogram import types
+from aiogram import types, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters.state import StateFilter
 from example_bot.misc.datetime_function import get_day_and_hours_from_date
@@ -21,22 +21,7 @@ class SetPredictions(BasicBotOperation):
             self,
             message: types.Message,
             state: FSMContext,
-            main_time_prediction: datetime.time,
     ):
-
-        tomorrow = datetime.now() + timedelta(days=1)
-        tomorrow = datetime.combine(tomorrow, main_time_prediction)
-
-        if main_time_prediction.hour != datetime.now().hour:
-
-            self.apscheduler.scheduler.add_job(
-                self.start_prediction,
-                'date',
-                run_date=tomorrow,
-                args=[message, state, main_time_prediction]
-            )
-            return
-
         payments_end = self.operation_db.select_user_info_db(
             self.operation_db.COLUMNS_INFO.payments_end,
             message.from_user.id
@@ -69,12 +54,6 @@ class SetPredictions(BasicBotOperation):
             text=text,
             reply_markup=self.keyboard.get_aspect_selection_ikb
         )
-        self.apscheduler.scheduler.add_job(
-            self.start_prediction,
-            'date',
-            run_date=tomorrow,
-            args=[message, state, main_time_prediction]
-        )
 
     async def set_prediction(
             self,
@@ -84,8 +63,6 @@ class SetPredictions(BasicBotOperation):
         set_time = message.text
         try:
             set_time = datetime.strptime(set_time, '%H %M').time()
-            tomorrow = datetime.now() + timedelta(days=1)
-            tomorrow = datetime.combine(tomorrow, set_time)
         except:
             await message.answer(
                 text=("Введён неверный формат времени."
@@ -94,18 +71,6 @@ class SetPredictions(BasicBotOperation):
                       "Пример: 12 30"),
                 reply_markup=self.keyboard.abolition_ikb)
             return
-
-        time_prediction = self.operation_db.select_user_info_db(
-            self.operation_db.COLUMNS_INFO.time_prediction,
-            message.from_user.id
-        )
-
-        self.apscheduler.scheduler.add_job(
-            self.start_prediction,
-            'date',
-            run_date=tomorrow,
-            args=[message, state, time_prediction]
-        )
 
         self.operation_db.update_user_info_db(
             {

@@ -299,6 +299,8 @@ class Predictions(BasicBotOperation):
 
             await call.message.answer("Авто генерация ежедневных прогнозов "
                                       "успешно настроена.")
+
+            await state.clear()
             return
 
         (place_birth, latitude, longitude, time_birth,

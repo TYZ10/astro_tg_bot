@@ -1,15 +1,13 @@
 import datetime
 import logging
-from math import ceil
+import pytz
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from aiogram.fsm.context import FSMContext, StorageKey, BaseStorage
 
 
 from .basic import BasicBotOperation
 from example_bot.misc.datetime_function import (get_day_and_hours_from_date as
                                                 get_hour_or_day)
-from example_bot.Tbot import states
 from .generation.get_info_gpt import main_get_info_gpt
 from ..misc import create_aspects
 
@@ -171,7 +169,7 @@ class ApshedulerBot(BasicBotOperation):
     async def check_time_prediction(self):
         col_info = self.operation_db.COLUMNS_INFO
 
-        time_now = datetime.datetime.now()
+        time_now = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
 
         all_info = self.operation_db.select_all_user_info_db(
             f"{col_info.time_prediction}, {col_info.payments_end}, "
@@ -230,7 +228,7 @@ class ApshedulerBot(BasicBotOperation):
 
     async def on_startup(self):
         self.scheduler.add_job(self.update_count_generation,
-                               'cron', hour=18, minute=3)
+                               'cron', hour=0, minute=0)
         self.scheduler.add_job(
             self.check_time_prediction,
             'interval',

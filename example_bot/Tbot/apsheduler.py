@@ -179,7 +179,8 @@ class ApshedulerBot(BasicBotOperation):
         )
         for time_prediction, payments_end, userid in all_info:
             if get_hour_or_day(payments_end) != 0:
-                if time_now.minute == time_prediction.minute:
+                if (time_now.minute == time_prediction.minute and
+                        time_now.hour == time_prediction.hour):
                     try:
                         await self.__start_prediction(
                             user_id=userid

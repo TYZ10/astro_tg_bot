@@ -288,6 +288,19 @@ class Predictions(BasicBotOperation):
 
         col_info = self.operation_db.COLUMNS_INFO
 
+        set_time = st.get("set_time")
+        if set_time:
+            self.operation_db.update_user_info_db(
+                {
+                    col_info.aspects: all_aspects,
+                },
+                userid=call.from_user.id
+            )
+
+            await call.message.answer("Авто генерация ежедневных прогнозов "
+                                      "успешно настроена.")
+            return
+
         (place_birth, latitude, longitude, time_birth,
          data_birth) = self.operation_db.select_user_info_db(
             f"{col_info.place_birth}, "

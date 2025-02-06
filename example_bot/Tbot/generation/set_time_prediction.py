@@ -80,11 +80,13 @@ class SetPredictions(BasicBotOperation):
         )
 
         await message.answer(
-            text="Успешно зарегистрировал ежедневный прогноз.",
-            reply_markup=self.keyboard.main_menu_kb
+            text="Выберите 4 аспекта",
+            reply_markup=self.keyboard.get_aspect_selection_ikb
         )
 
-        await state.clear()
+        await state.set_state(states.predictions_1_aspect)
+        await state.update_data(set_time=True)
+        await state.update_data(period="day")
 
     def create_router(self):
         self.router.message.register(

@@ -24,6 +24,7 @@ class ColumnsInfoDB:
         self.payments_id = "payments_id"
 
         self.time_prediction = "time_prediction"
+        self.aspects = "aspects"
 
 
 COLUMNS_INFO = ColumnsInfoDB()

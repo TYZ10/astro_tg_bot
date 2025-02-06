@@ -24,16 +24,17 @@ def init_db(cur: _psycopg.cursor, conn: _psycopg.connection,
         {COLUMNS_INFO.payments_id} VARCHAR(100) DEFAULT NULL,
         {COLUMNS_INFO.referral_all_count_user} INTEGER DEFAULT 0,
         {COLUMNS_INFO.referral_all_count_points_user} INTEGER DEFAULT 0,
-        {COLUMNS_INFO.time_prediction} TIME DEFAULT NULL
+        {COLUMNS_INFO.time_prediction} TIME DEFAULT NULL,
+        {COLUMNS_INFO.aspects} TEXT DEFAULT NULL
     )''')
 
     cur.execute(
         f"SELECT column_name FROM information_schema.columns WHERE "
-        f"table_name='{name_db}' AND column_name='{COLUMNS_INFO.time_prediction}'")
+        f"table_name='{name_db}' AND column_name='{COLUMNS_INFO.aspects}'")
     if cur.fetchone() is None:
         # Если колонки нет, добавим ее
         cur.execute(
             f'ALTER TABLE {name_db} ADD COLUMN '
-            f'{COLUMNS_INFO.time_prediction} TIME DEFAULT NULL;')
+            f'{COLUMNS_INFO.aspects} TEXT DEFAULT NULL;')
 
     conn.commit()

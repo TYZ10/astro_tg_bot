@@ -10,9 +10,10 @@ class RefSystemBot(BasicBotOperation):
         try:
             col_info = self.operation_db.COLUMNS_INFO
 
-            count_user, count_point = self.operation_db.select_user_info_db(
+            count_user, count_point, referrals_count = self.operation_db.select_user_info_db(
                 f"{col_info.referral_all_count_user}, "
-                f"{col_info.referral_all_count_points_user}",
+                f"{col_info.referral_all_count_points_user}, "
+                f"{col_info.referrals_count}",
                 call.from_user.id,
                 many=True
             )
@@ -31,6 +32,7 @@ class RefSystemBot(BasicBotOperation):
 Чем больше друзей ты пригласишь, тем больше бонусов получишь! Делись своей ссылкой, наслаждайся звёздными подсказками и используй возможности бота на максимум. 🌟
 
 Ваша статистика:
+Реферальных баллов: {referrals_count}
 Количество зарегистрированных рефералов: {count_user}
 Количество рефералов, которые выполнили генерации: {count_point}
 

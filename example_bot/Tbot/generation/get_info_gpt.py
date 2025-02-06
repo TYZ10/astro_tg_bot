@@ -7,10 +7,12 @@ from example_bot.Tbot import ConfigBot
 
 
 async def main_get_info_gpt(config: ConfigBot, all_info, promt: str,
-                            next: bool = False):
+                            next: bool = False, next_day: bool = False):
     today = date.today()
     if next:
         today = today + relativedelta(years=1, months=1, days=1)
+    if next_day:
+        today = today + timedelta(days=1)
 
     promt = promt + f"\n{all_info}\n\nСегодняшняя дата: {today}"
 

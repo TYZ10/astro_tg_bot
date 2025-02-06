@@ -98,7 +98,7 @@ class ApshedulerBot(BasicBotOperation):
             self.config,
             f"{aspects}",
             text,
-            next=True,
+            next_day=True,
         )
         if len(str(text_gpt)) > 4096:
             await self.config.bot.send_message(
